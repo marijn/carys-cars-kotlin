@@ -49,11 +49,7 @@ data class UnlockVehicle(
 class UnlockVehicleAutomation: ProcessManager {
     override fun processEvent(trigger: Event): List<Command> {
         return when(trigger) {
-            is RentalStarted -> {
-                val vehicle = trigger.vehicle
-
-                unlockVehicle(vehicle)
-            }
+            is RentalStarted -> unlockVehicle(trigger.vehicle)
             else -> listOf()
         }
     }
