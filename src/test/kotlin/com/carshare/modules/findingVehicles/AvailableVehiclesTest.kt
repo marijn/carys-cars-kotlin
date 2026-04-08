@@ -76,7 +76,7 @@ class AvailableVehiclesTest {
         val scenario = ProjectionScenario()
             .given(
                 CarWasAddedToFleet(
-                    "NL:HZL-55-X",
+                    "NL:HTZ-11-G",
                     "52,34226° N, 4,87345° E",
                     23.3,
                     VehicleClass.FUN_PREMIUM,
