@@ -79,8 +79,9 @@ class AvailableVehiclesTest {
                     listOf()
                 )
             )
-            .assertOnProjection(AvailableVehiclesInMemoryProjection())
+            .assertOnProjection(createSubjectUnderTest())
     }
+
     @Test
     fun `It answers with availability when cars have been added to the fleet which have not been rented out` () {
         val scenario = ProjectionScenario()
@@ -98,7 +99,7 @@ class AvailableVehiclesTest {
                     27.1,
                     VehicleClass.FUN_PREMIUM,
                     LocalDateTime.parse("2025-11-12T10:15:04")
-                )
+                ),
             )
             .whenAskedFor(
                 WhatVehiclesAreAvailableInTheArea(
@@ -124,6 +125,8 @@ class AvailableVehiclesTest {
                     )
                 )
             )
-            .assertOnProjection(AvailableVehiclesInMemoryProjection())
+            .assertOnProjection(createSubjectUnderTest())
     }
+
+    protected fun createSubjectUnderTest(): AvailableVehiclesInMemoryProjection = AvailableVehiclesInMemoryProjection()
 }
