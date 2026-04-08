@@ -35,8 +35,18 @@ data class AvailableVehicle(
 )
 
 class AvailableVehiclesInMemoryProjection: Projection {
+    private var vehicles = listOf<AvailableVehicle>()
 
     override fun acknowledge(event: Event) {
+        when (event) {
+            is CarWasAddedToFleet -> vehicles = vehicles.plus(
+                AvailableVehicle(
+                    event.vehicle,
+                    event.parkedLocation,
+                    event.vehicleClass
+                )
+            )
+        }
     }
 
     override fun ask(question: Question): Answer {
@@ -44,7 +54,7 @@ class AvailableVehiclesInMemoryProjection: Projection {
             is WhatVehiclesAreAvailableInTheArea -> AvailableVehicles(
                 question.fleet,
                 question.referenceLocation,
-                listOf()
+                vehicles
             )
             else -> throw Exception("Unknown query")
         }
