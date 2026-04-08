@@ -5,3 +5,9 @@ abstract class Command {
 
 abstract class Event {
 }
+
+abstract class Answer {
+}
+
+abstract class Question {
+}
