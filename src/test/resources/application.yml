@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:carshare_test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    # Hibernate 6 (Spring Boot 3.x) auto-detects H2 dialect — no need to set it explicitly
+    show-sql: false
+  flyway:
+    enabled: false
+
+stripe:
+  api-key: sk_test_dummy
+  webhook-secret: whsec_dummy
+
+smartcar:
+  client-id: dummy
+  client-secret: dummy
+  base-url: http://localhost:9999
+
+veriff:
+  api-key: dummy
+  base-url: http://localhost:9998
+
+app:
+  reservation:
+    free-minutes-per-day: 20
+    expiry-minutes: 20
+    overage-rate-cents: 20
+  rental:
+    rate-cents-per-minute: 39
+    max-km-free: 200
+    overage-rate-cents-per-km: 30
+  battery:
+    charge-threshold-percent: 15
+  operating-region:
+    cities:
+      - name: Amsterdam
+        country: NL

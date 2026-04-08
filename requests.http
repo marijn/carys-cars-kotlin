@@ -1,0 +1,95 @@
+### Seed demo vehicles
+POST http://localhost:8080/api/local/seed
+
+###
+
+### Get demo customer (grab the id for use below)
+GET http://localhost:8080/api/local/me
+
+###
+
+### Browse all available vehicles
+GET http://localhost:8080/api/vehicles
+
+###
+
+### Browse by city
+GET http://localhost:8080/api/vehicles?city=Amsterdam
+
+###
+
+### Browse by class (CITY_SMALL, LONG_RANGE, FUN_PREMIUM, BULKY)
+GET http://localhost:8080/api/vehicles?vehicleClass=CITY_SMALL
+
+###
+
+### Get a specific vehicle
+GET http://localhost:8080/api/vehicles/{{vehicleId}}
+
+###
+
+### View damage reports for a vehicle
+GET http://localhost:8080/api/vehicles/{{vehicleId}}/damage-reports
+
+###
+
+### Report new damage
+POST http://localhost:8080/api/vehicles/{{vehicleId}}/damage-reports
+Content-Type: application/json
+
+{
+  "position": "FRONT",
+  "photoUrl": "https://example.com/photo.jpg",
+  "licensePlatePhotoUrl": "https://example.com/plate.jpg",
+  "notes": "Small scratch on bumper"
+}
+
+###
+
+### Reserve a vehicle
+POST http://localhost:8080/api/reservations?vehicleId={{vehicleId}}
+
+###
+
+### Extend a reservation by 10 minutes
+POST http://localhost:8080/api/reservations/{{reservationId}}/extend
+Content-Type: application/json
+
+{
+  "additionalMinutes": 10
+}
+
+###
+
+### Cancel a reservation
+DELETE http://localhost:8080/api/reservations/{{reservationId}}
+
+###
+
+### Start a rental
+POST http://localhost:8080/api/rentals/start?reservationId={{reservationId}}
+
+###
+
+### Get active rental
+GET http://localhost:8080/api/rentals/active
+
+###
+
+### End a rental (triggers invoice + Stripe charge)
+POST http://localhost:8080/api/rentals/{{rentalId}}/end
+
+###
+
+### Start KYC verification (returns a Veriff URL)
+POST http://localhost:8080/api/customers/me/kyc/start
+
+###
+
+### Add a payment method
+POST http://localhost:8080/api/customers/me/payment-method
+Content-Type: application/json
+
+{
+  "paymentMethodId": "pm_card_visa"
+}

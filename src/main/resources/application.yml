@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/carshare}
+    username: ${DATABASE_USER:carshare}
+    password: ${DATABASE_PASSWORD:carshare}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH_ISSUER_URI:https://placeholder.invalid}
+
+stripe:
+  api-key: ${STRIPE_API_KEY:sk_test_placeholder}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_placeholder}
+
+smartcar:
+  client-id: ${SMARTCAR_CLIENT_ID:placeholder}
+  client-secret: ${SMARTCAR_CLIENT_SECRET:placeholder}
+  base-url: https://api.smartcar.com/v2.0
+
+veriff:
+  api-key: ${VERIFF_API_KEY:placeholder}
+  base-url: https://stationapi.veriff.com/v1
+
+app:
+  reservation:
+    free-minutes-per-day: 20
+    expiry-minutes: 20
+    overage-rate-cents: 20
+  rental:
+    rate-cents-per-minute: 39
+    max-km-free: 200
+    overage-rate-cents-per-km: 30
+  battery:
+    charge-threshold-percent: 15
+  operating-region:
+    cities:
+      - name: Amsterdam
+        country: NL
+      - name: Berlin
+        country: DE
+      - name: Zurich
+        country: CH
+      - name: Munich
+        country: DE
+      - name: Copenhagen
+        country: DK
+      - name: Rotterdam
+        country: NL
+      - name: Dusseldorf
+        country: DE

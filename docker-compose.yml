@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgis/postgis:15-3.3
+    environment:
+      POSTGRES_DB: carshare
+      POSTGRES_USER: carshare
+      POSTGRES_PASSWORD: carshare
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/carshare
+      DATABASE_USER: carshare
+      DATABASE_PASSWORD: carshare
+      OAUTH_ISSUER_URI: ${OAUTH_ISSUER_URI}
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      SMARTCAR_CLIENT_ID: ${SMARTCAR_CLIENT_ID}
+      SMARTCAR_CLIENT_SECRET: ${SMARTCAR_CLIENT_SECRET}
+      VERIFF_API_KEY: ${VERIFF_API_KEY}
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
