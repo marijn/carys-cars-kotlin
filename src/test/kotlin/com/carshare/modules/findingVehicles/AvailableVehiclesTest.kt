@@ -6,22 +6,10 @@ import com.carshare.infrastructure.messaging.Event
 import com.carshare.infrastructure.messaging.Question
 import com.carshare.infrastructure.projection.Projection
 import com.carshare.infrastructure.projection.testing.ProjectionScenario
+import com.carshare.modules.fleetManagement.CarWasAddedToFleet
+import com.carshare.modules.fleetManagement.CarWasRemovedFromFleet
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
-
-data class CarWasAddedToFleet (
-    val vehicle: String,
-    val parkedLocation: String,
-    val odometer: Double,
-    val vehicleClass: VehicleClass,
-    val addedToFleetAt: LocalDateTime
-): Event()
-
-data class CarWasRemovedFromFleet (
-    val vehicle: String,
-    val odometer: Double,
-    val removedFromFleetAt: LocalDateTime
-): Event()
 
 data class WhatVehiclesAreAvailableInTheArea(
     val fleet: String,
