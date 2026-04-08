@@ -8,13 +8,6 @@ import com.carshare.modules.rentals.RentalStarted
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-data class UnlockVehicle(
-    /**
-     * @example "NL:GGS-10-N"
-     */
-    val vehicle: String
-): Command()
-
 class UnlockVehicleAutomation: ProcessManager {
     override fun processEvent(trigger: Event): List<Command> {
         return when(trigger) {
