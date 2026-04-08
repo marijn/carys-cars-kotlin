@@ -48,11 +48,14 @@ data class UnlockVehicle(
 
 class UnlockVehicleAutomation: ProcessManager {
     override fun processEvent(trigger: Event): List<Command> {
-        return listOf(
-            UnlockVehicle(
-                "NL:JLP-51-J"
+        return when(trigger) {
+            is RentalStarted -> listOf(
+                UnlockVehicle(
+                    "NL:JLP-51-J"
+                )
             )
-        )
+            else -> listOf()
+        }
     }
 }
 
