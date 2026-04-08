@@ -61,7 +61,7 @@ class AvailableVehiclesInMemoryProjection: Projection {
     }
 }
 
-class AvailableVehiclesTest {
+abstract class AvailableVehiclesTest {
 
     @Test
     fun `It answers with no availability when no cars have been added to the fleet` () {
@@ -128,5 +128,9 @@ class AvailableVehiclesTest {
             .assertOnProjection(createSubjectUnderTest())
     }
 
-    protected fun createSubjectUnderTest(): AvailableVehiclesInMemoryProjection = AvailableVehiclesInMemoryProjection()
+    protected abstract fun createSubjectUnderTest(): Projection
+}
+
+class AvailableVehiclesInMemoryProjectionTest: AvailableVehiclesTest() {
+    override fun createSubjectUnderTest(): AvailableVehiclesInMemoryProjection = AvailableVehiclesInMemoryProjection()
 }
