@@ -11,7 +11,7 @@ import com.carshare.modules.fleetManagement.CarWasRemovedFromFleet
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-class AvailableVehiclesInMemoryProjection: Projection {
+class ProjectionOfAvailableVehiclesIntoMemory: Projection {
     private var vehicles = listOf<AvailableVehicle>()
 
     override fun acknowledge(event: Event) {
@@ -155,6 +155,6 @@ abstract class AvailableVehiclesTest {
     protected abstract fun createSubjectUnderTest(): Projection
 }
 
-class AvailableVehiclesInMemoryProjectionTest: AvailableVehiclesTest() {
-    override fun createSubjectUnderTest(): AvailableVehiclesInMemoryProjection = AvailableVehiclesInMemoryProjection()
+class ProjectionOfAvailableVehiclesIntoMemoryTest: AvailableVehiclesTest() {
+    override fun createSubjectUnderTest(): ProjectionOfAvailableVehiclesIntoMemory = ProjectionOfAvailableVehiclesIntoMemory()
 }
