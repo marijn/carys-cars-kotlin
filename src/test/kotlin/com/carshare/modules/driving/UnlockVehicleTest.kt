@@ -48,7 +48,11 @@ data class UnlockVehicle(
 
 class UnlockVehicleAutomation: ProcessManager {
     override fun processEvent(trigger: Event): List<Command> {
-        TODO("Not yet implemented")
+        return listOf(
+            UnlockVehicle(
+                "NL:JLP-51-J"
+            )
+        )
     }
 }
 
