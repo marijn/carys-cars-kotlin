@@ -52,15 +52,17 @@ class UnlockVehicleAutomation: ProcessManager {
             is RentalStarted -> {
                 val vehicle = trigger.vehicle
 
-                listOf(
-                    UnlockVehicle(
-                        vehicle,
-                    )
-                )
+                unlockVehicle(vehicle)
             }
             else -> listOf()
         }
     }
+
+    private fun unlockVehicle(vehicle: String): List<UnlockVehicle> = listOf(
+        UnlockVehicle(
+            vehicle,
+        )
+    )
 }
 
 class UnlockVehicleTest {
