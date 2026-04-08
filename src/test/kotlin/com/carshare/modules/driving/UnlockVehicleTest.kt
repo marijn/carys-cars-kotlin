@@ -8,7 +8,7 @@ import com.carshare.modules.rentals.RentalStarted
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-class UnlockVehicleAutomation: ProcessManager {
+class UnlockVehicleProcessManager: ProcessManager {
     override fun processEvent(trigger: Event): List<Command> {
         return when(trigger) {
             is RentalStarted -> unlockVehicle(trigger.vehicle)
@@ -42,6 +42,6 @@ class UnlockVehicleTest {
                     "NL:JLP-51-J"
                 )
             )
-            .assertOnProcessManager(UnlockVehicleAutomation())
+            .assertOnProcessManager(UnlockVehicleProcessManager())
     }
 }
