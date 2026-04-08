@@ -11,23 +11,6 @@ import com.carshare.modules.fleetManagement.CarWasRemovedFromFleet
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-data class WhatVehiclesAreAvailableInTheArea(
-    val fleet: String,
-    val referenceLocation: String
-) : Question()
-
-data class AvailableVehicles(
-    val fleet: String,
-    val referenceLocation: String,
-    val availableVehicles: List<AvailableVehicle>
-): Answer()
-
-data class AvailableVehicle(
-    val vehicle: String,
-    val location: String,
-    val vehicleClass: VehicleClass
-)
-
 class AvailableVehiclesInMemoryProjection: Projection {
     private var vehicles = listOf<AvailableVehicle>()
 
