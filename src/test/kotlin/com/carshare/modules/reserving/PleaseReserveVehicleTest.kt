@@ -113,7 +113,10 @@ public data class PleaseReserveVehicle(
 sealed class ReservingState: State<ReservingState>() {
     class VehicleIsUnavailable(): ReservingState() {
         override fun evolve(event: Event): ReservingState {
-            return this;
+            return when(event) {
+                is VehicleEnteredOperation -> VehicleIsAvailable(event.vehicleClass)
+                else -> this
+            };
         }
     };
 
@@ -121,7 +124,13 @@ sealed class ReservingState: State<ReservingState>() {
         internal val vehicleClass: VehicleClass
     ): ReservingState() {
         override fun evolve(event: Event): ReservingState {
-            return this;
+            return when(event) {
+                is VehicleWasReserved -> VehicleIsReserved(
+                    this.vehicleClass,
+                    event.reservedBy
+                )
+                else -> this
+            };
         }
     };
 
@@ -137,7 +146,29 @@ sealed class ReservingState: State<ReservingState>() {
 
 class ReservationDecider(state: ReservingState): Decider<ReservingState>(state) {
     override fun decide(command: Command): List<Event> {
-        return listOf();
+        return when (command) {
+            is PleaseReserveVehicle -> when(state) {
+                is ReservingState.VehicleIsAvailable -> listOf(
+                    VehicleWasReserved(
+                        command.vehicle,
+                        state.vehicleClass,
+                        command.interestedCustomer,
+                        command.issuedAt,
+                    )
+                )
+                is ReservingState.VehicleIsReserved -> listOf(
+                    VehicleCouldNotBeReserved(
+                        command.vehicle,
+                        state.vehicleClass,
+                        command.interestedCustomer,
+                        ReservationRejectionReason.AlreadyReserved(state.reservedBy),
+                        command.issuedAt,
+                    )
+                )
+                else -> listOf();
+            }
+            else -> listOf();
+        }
     }
 }
 
