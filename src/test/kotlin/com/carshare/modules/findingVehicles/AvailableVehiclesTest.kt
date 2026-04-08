@@ -17,6 +17,12 @@ data class CarWasAddedToFleet (
     val addedToFleetAt: LocalDateTime
 ): Event()
 
+data class CarWasRemovedFromFleet (
+    val vehicle: String,
+    val odometer: Double,
+    val removedFromFleetAt: LocalDateTime
+): Event()
+
 data class WhatVehiclesAreAvailableInTheArea(
     val fleet: String,
     val referenceLocation: String
@@ -117,6 +123,52 @@ abstract class AvailableVehiclesTest {
                             "52,34226° N, 4,87345° E",
                             VehicleClass.FUN_PREMIUM
                         ),
+                        AvailableVehicle(
+                            "NL:HZL-55-X",
+                            "52,34508° N, 4,84512° E",
+                            VehicleClass.FUN_PREMIUM
+                        ),
+                    )
+                )
+            )
+            .assertOnProjection(createSubjectUnderTest())
+    }
+
+    @Test
+    fun `It answers with availability when cars have been added to the fleet but leaves out cars that have been removed afterwards` () {
+        val scenario = ProjectionScenario()
+            .given(
+                CarWasAddedToFleet(
+                    "NL:HTZ-11-G",
+                    "52,34226° N, 4,87345° E",
+                    23.3,
+                    VehicleClass.FUN_PREMIUM,
+                    LocalDateTime.parse("2025-11-12T09:03:01")
+                ),
+                CarWasAddedToFleet(
+                    "NL:HZL-55-X",
+                    "52,34508° N, 4,84512° E",
+                    27.1,
+                    VehicleClass.FUN_PREMIUM,
+                    LocalDateTime.parse("2025-11-12T10:15:04")
+                ),
+                CarWasRemovedFromFleet(
+                    "NL:HTZ-11-G",
+                    29732.1,
+                    LocalDateTime.parse("2026-03-31T16:40:30")
+                ),
+            )
+            .whenAskedFor(
+                WhatVehiclesAreAvailableInTheArea(
+                    "NL",
+                    "52,37117° N, 4,87950° E"
+                )
+            )
+            .thenExpect(
+                AvailableVehicles(
+                    "NL",
+                    "52,37117° N, 4,87950° E",
+                    listOf(
                         AvailableVehicle(
                             "NL:HZL-55-X",
                             "52,34508° N, 4,84512° E",
