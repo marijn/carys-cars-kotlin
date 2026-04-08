@@ -52,6 +52,7 @@ class AvailableVehiclesInMemoryProjection: Projection {
                     event.vehicleClass
                 )
             )
+            is CarWasRemovedFromFleet -> vehicles = vehicles.dropWhile { vehicle -> vehicle.vehicle == event.vehicle }
         }
     }
 
