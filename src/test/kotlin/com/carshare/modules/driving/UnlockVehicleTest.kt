@@ -51,7 +51,7 @@ class UnlockVehicleAutomation: ProcessManager {
         return when(trigger) {
             is RentalStarted -> listOf(
                 UnlockVehicle(
-                    "NL:JLP-51-J"
+                    trigger.vehicle,
                 )
             )
             else -> listOf()
