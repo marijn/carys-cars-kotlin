@@ -30,11 +30,14 @@ class AvailableVehiclesInMemoryProjection: Projection {
     }
 
     override fun ask(question: Question): Answer {
-        return AvailableVehicles(
-            "NL",
-            "52,37117° N, 4,87950° E",
-            listOf()
-        )
+        return when(question) {
+            is WhatVehiclesAreAvailableInTheArea -> AvailableVehicles(
+                question.fleet,
+                question.referenceLocation,
+                listOf()
+            )
+            else -> throw Exception("Unknown query")
+        }
     }
 }
 
