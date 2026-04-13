@@ -60,12 +60,6 @@ data class VehicleWasReserved(
     val occurredOn: LocalDateTime
 ): Event() {};
 
-sealed class ReservationRejectionReason {
-    data class AlreadyReserved(
-        private val currentlyReservedBy: String
-    ): ReservationRejectionReason();
-}
-
 data class VehicleCouldNotBeReserved(
     /**
      * @example "DE:M-CC-0001"
@@ -92,6 +86,12 @@ data class VehicleCouldNotBeReserved(
      */
     val occurredOn: LocalDateTime
 ): Event() {};
+
+sealed class ReservationRejectionReason {
+    data class AlreadyReserved(
+        private val currentlyReservedBy: String
+    ): ReservationRejectionReason();
+}
 
 data class PleaseReserveVehicle(
     /**
