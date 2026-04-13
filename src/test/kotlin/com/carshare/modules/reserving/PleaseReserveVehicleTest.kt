@@ -23,41 +23,41 @@ enum class VehicleClass {
 
 typealias CustomerId = String;
 
-public data class VehicleEnteredOperation(
+data class VehicleEnteredOperation(
     /**
      * @example "DE:M-CC-0001"
      */
-    public val vehicle: LicensePlate,
+    val vehicle: LicensePlate,
     /**
      * @example "fun vehicles"
      */
-    public val vehicleClass: VehicleClass,
+    val vehicleClass: VehicleClass,
     /**
      * @example 2024-11-02 16:59:01 Europe/Amsterdam
      */
-    public val occurredOn: LocalDateTime
+    val occurredOn: LocalDateTime
 ) : Event() {};
 
-public data class VehicleWasReserved(
+data class VehicleWasReserved(
     /**
      * @example "DE:M-CC-0001"
      */
-    public val vehicle: LicensePlate,
+    val vehicle: LicensePlate,
 
     /**
      * @example "fun vehicles"
      */
-    public val vehicleClass: VehicleClass,
+    val vehicleClass: VehicleClass,
 
     /**
      * @example "customer:dae3ca24-b1e6-4f0e-85cb-0c4b9f5fab8b"
      */
-    public val reservedBy: CustomerId,
+    val reservedBy: CustomerId,
 
     /**
      * @example 2024-11-02 16:59:01 Europe/Amsterdam
      */
-    public val occurredOn: LocalDateTime
+    val occurredOn: LocalDateTime
 ): Event() {};
 
 sealed class ReservationRejectionReason {
@@ -66,48 +66,48 @@ sealed class ReservationRejectionReason {
     ): ReservationRejectionReason();
 }
 
-public data class VehicleCouldNotBeReserved(
+data class VehicleCouldNotBeReserved(
     /**
      * @example "DE:M-CC-0001"
      */
-    public val vehicle: LicensePlate,
+    val vehicle: LicensePlate,
 
     /**
      * @example "fun vehicles"
      */
-    public val vehicleClass: VehicleClass,
+    val vehicleClass: VehicleClass,
 
     /**
      * @example "customer:dae3ca24-b1e6-4f0e-85cb-0c4b9f5fab8b"
      */
-    public val interestedCustomer: CustomerId,
+    val interestedCustomer: CustomerId,
 
     /**
      * @example "already reserved"
      */
-    public val reason: ReservationRejectionReason,
+    val reason: ReservationRejectionReason,
 
     /**
      * @example 2024-11-02 16:59:01 Europe/Amsterdam
      */
-    public val occurredOn: LocalDateTime
+    val occurredOn: LocalDateTime
 ): Event() {};
 
-public data class PleaseReserveVehicle(
+data class PleaseReserveVehicle(
     /**
      * @example "DE:M-CC-0001"
      */
-    public val vehicle: LicensePlate,
+    val vehicle: LicensePlate,
 
     /**
      * @example "customer:dae3ca24-b1e6-4f0e-85cb-0c4b9f5fab8b"
      */
-    public val interestedCustomer: CustomerId,
+    val interestedCustomer: CustomerId,
 
     /**
      * @example 2024-11-02 16:59:01 Europe/Amsterdam
      */
-    public val issuedAt: LocalDateTime
+    val issuedAt: LocalDateTime
 ): Command() {};
 
 sealed class ReservingState: State<ReservingState>() {
