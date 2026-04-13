@@ -21,6 +21,8 @@ enum class VehicleClass {
     MovingBulkyThings,
 }
 
+typealias CustomerId = String;
+
 public data class VehicleEnteredOperation(
     /**
      * @example "DE:M-CC-0001"
@@ -35,8 +37,6 @@ public data class VehicleEnteredOperation(
      */
     public val occurredOn: LocalDateTime
 ) : Event() {};
-
-typealias CustomerId = String;
 
 public data class VehicleWasReserved(
     /**
