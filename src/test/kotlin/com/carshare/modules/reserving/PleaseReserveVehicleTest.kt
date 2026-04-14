@@ -4,12 +4,11 @@ import com.carshare.infrastructure.decider.Decider
 import com.carshare.infrastructure.decider.State
 import com.carshare.infrastructure.messaging.Command
 import com.carshare.infrastructure.messaging.Event
+import com.carshare.modules.CustomerId
 import com.carshare.modules.LicensePlate
 import com.carshare.modules.VehicleClass
 import java.time.LocalDateTime
 import org.junit.jupiter.api.Test
-
-typealias CustomerId = String;
 
 sealed interface AnyReservationEvent: Event {
     data class VehicleEnteredOperation(
