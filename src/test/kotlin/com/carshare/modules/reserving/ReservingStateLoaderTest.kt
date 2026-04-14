@@ -45,6 +45,6 @@ class InMemoryReservingStateLoader: StateLoader<LicensePlate, ReservingState, An
     }
 
     override fun loadStateOrElse(identifiedBy: LicensePlate, fallback: ReservingState): ReservingState {
-        TODO("Not yet implemented")
+        return fallback;
     }
 }
