@@ -6,12 +6,17 @@ import com.carshare.domain.VehicleClass
 import com.carshare.domain.VehicleStatus
 import com.carshare.external.IStripeClient
 import com.carshare.external.IVeriffClient
+import com.carshare.infrastructure.messaging.Command
+import com.carshare.infrastructure.messaging.HandlesCommands
+import com.carshare.modules.LicensePlate
+import com.carshare.modules.reserving.AnyReservationCommand
 import com.carshare.repository.CustomerDailyReservationUsageRepository
 import com.carshare.repository.CustomerRepository
 import com.carshare.repository.ReservationRepository
 import com.carshare.repository.VehicleRepository
 import com.carshare.service.CustomerService
 import com.carshare.service.ReservationService
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
@@ -21,6 +26,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.query.FluentQuery
 import org.springframework.security.oauth2.jwt.Jwt
+import java.time.LocalDateTime
 import java.util.*
 import java.util.function.Function
 
@@ -341,6 +347,17 @@ class ReservationControllerTest {
             mock<IStripeClient>(),
             mock<IVeriffClient>()
         )
+        val fakeHandler = object : HandlesCommands {
+            var commands: Set<Command> = emptySet()
+
+            override fun handle(command: Command) {
+                commands = commands.plus(command)
+            }
+
+            fun handledOnly(expectedCommand: Command) {
+                assertThat(commands).containsOnly(expectedCommand);
+            }
+        }
         val controller = ReservationController(
             ReservationService(
                 mock<ReservationRepository>(),
@@ -352,6 +369,7 @@ class ReservationControllerTest {
                 20
             ),
             customerService,
+            fakeHandler
         )
 
         assertThatThrownBy({
@@ -364,5 +382,11 @@ class ReservationControllerTest {
                 UUID.fromString("12341234-1234-1234-1234-123412341234")
             );
         }).hasMessage("Customer not ready to rent (KYC or payment missing)")
+        val expectedCommand = AnyReservationCommand.PleaseReserveVehicle(
+            LicensePlate.DutchLicensePlate("GGR-12-X"),
+            "customer:11111111-1111-1111-1111-111111111111",
+            LocalDateTime.now()
+        )
+        fakeHandler.handledOnly(expectedCommand)
     }
 }

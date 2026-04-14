@@ -1,6 +1,7 @@
 package com.carshare.controller
 
 import com.carshare.domain.*
+import com.carshare.infrastructure.messaging.HandlesCommands
 import com.carshare.modules.LicensePlate
 import com.carshare.modules.reserving.AnyReservationCommand
 import com.carshare.service.*
@@ -123,6 +124,7 @@ class VehicleController(
 class ReservationController(
     private val reservationService: ReservationService,
     private val customerService: CustomerService,
+    private val handler: HandlesCommands,
 ) {
     @PostMapping
     fun createReservation(
@@ -131,7 +133,7 @@ class ReservationController(
     ): Reservation {
         val vehicle = reservationService.vehicleRepository.findById(vehicleId).orElseThrow();
 
-        AnyReservationCommand.PleaseReserveVehicle(
+        val command = AnyReservationCommand.PleaseReserveVehicle(
             LicensePlate.DutchLicensePlate(vehicle.licensePlate),
             extractFromJwt(jwt),
             LocalDateTime.now()
