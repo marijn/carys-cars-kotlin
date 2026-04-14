@@ -23,69 +23,71 @@ enum class VehicleClass {
 
 typealias CustomerId = String;
 
-data class VehicleEnteredOperation(
-    /**
-     * @example "DE:M-CC-0001"
-     */
-    val vehicle: LicensePlate,
-    /**
-     * @example "fun vehicles"
-     */
-    val vehicleClass: VehicleClass,
-    /**
-     * @example 2024-11-02 16:59:01 Europe/Amsterdam
-     */
-    val occurredOn: LocalDateTime
-) : Event() {};
+sealed interface AnyReservationEvent: Event {
+    data class VehicleEnteredOperation(
+        /**
+         * @example "DE:M-CC-0001"
+         */
+        val vehicle: LicensePlate,
+        /**
+         * @example "fun vehicles"
+         */
+        val vehicleClass: VehicleClass,
+        /**
+         * @example 2024-11-02 16:59:01 Europe/Amsterdam
+         */
+        val occurredOn: LocalDateTime
+    ): AnyReservationEvent
 
-data class VehicleWasReserved(
-    /**
-     * @example "DE:M-CC-0001"
-     */
-    val vehicle: LicensePlate,
+    data class VehicleWasReserved(
+        /**
+         * @example "DE:M-CC-0001"
+         */
+        val vehicle: LicensePlate,
 
-    /**
-     * @example "fun vehicles"
-     */
-    val vehicleClass: VehicleClass,
+        /**
+         * @example "fun vehicles"
+         */
+        val vehicleClass: VehicleClass,
 
-    /**
-     * @example "customer:dae3ca24-b1e6-4f0e-85cb-0c4b9f5fab8b"
-     */
-    val reservedBy: CustomerId,
+        /**
+         * @example "customer:dae3ca24-b1e6-4f0e-85cb-0c4b9f5fab8b"
+         */
+        val reservedBy: CustomerId,
 
-    /**
-     * @example 2024-11-02 16:59:01 Europe/Amsterdam
-     */
-    val occurredOn: LocalDateTime
-): Event() {};
+        /**
+         * @example 2024-11-02 16:59:01 Europe/Amsterdam
+         */
+        val occurredOn: LocalDateTime
+    ): AnyReservationEvent
 
-data class VehicleCouldNotBeReserved(
-    /**
-     * @example "DE:M-CC-0001"
-     */
-    val vehicle: LicensePlate,
+    data class VehicleCouldNotBeReserved(
+        /**
+         * @example "DE:M-CC-0001"
+         */
+        val vehicle: LicensePlate,
 
-    /**
-     * @example "fun vehicles"
-     */
-    val vehicleClass: VehicleClass,
+        /**
+         * @example "fun vehicles"
+         */
+        val vehicleClass: VehicleClass,
 
-    /**
-     * @example "customer:dae3ca24-b1e6-4f0e-85cb-0c4b9f5fab8b"
-     */
-    val interestedCustomer: CustomerId,
+        /**
+         * @example "customer:dae3ca24-b1e6-4f0e-85cb-0c4b9f5fab8b"
+         */
+        val interestedCustomer: CustomerId,
 
-    /**
-     * @example "already reserved"
-     */
-    val reason: ReservationRejectionReason,
+        /**
+         * @example "already reserved"
+         */
+        val reason: ReservationRejectionReason,
 
-    /**
-     * @example 2024-11-02 16:59:01 Europe/Amsterdam
-     */
-    val occurredOn: LocalDateTime
-): Event() {};
+        /**
+         * @example 2024-11-02 16:59:01 Europe/Amsterdam
+         */
+        val occurredOn: LocalDateTime
+    ): AnyReservationEvent
+}
 
 sealed class ReservationRejectionReason {
     data class AlreadyReserved(
@@ -93,22 +95,24 @@ sealed class ReservationRejectionReason {
     ): ReservationRejectionReason();
 }
 
-data class PleaseReserveVehicle(
-    /**
-     * @example "DE:M-CC-0001"
-     */
-    val vehicle: LicensePlate,
+sealed interface AnyReservationCommand: Command {
+    data class PleaseReserveVehicle(
+        /**
+         * @example "DE:M-CC-0001"
+         */
+        val vehicle: LicensePlate,
 
-    /**
-     * @example "customer:dae3ca24-b1e6-4f0e-85cb-0c4b9f5fab8b"
-     */
-    val interestedCustomer: CustomerId,
+        /**
+         * @example "customer:dae3ca24-b1e6-4f0e-85cb-0c4b9f5fab8b"
+         */
+        val interestedCustomer: CustomerId,
 
-    /**
-     * @example 2024-11-02 16:59:01 Europe/Amsterdam
-     */
-    val issuedAt: LocalDateTime
-): Command() {};
+        /**
+         * @example 2024-11-02 16:59:01 Europe/Amsterdam
+         */
+        val issuedAt: LocalDateTime
+    ): AnyReservationCommand
+}
 
 sealed class ReservingState: State<ReservingState>() {
     class VehicleIsUnavailable(): ReservingState() {
@@ -175,23 +179,23 @@ class ReservationDecider(state: ReservingState): Decider<ReservingState>(state) 
 class PleaseReserveVehicleTest {
     @Test()
     fun `Is available`() {
-        val scenario = CommandHandlingScenario()
+        val scenario = CommandHandlingScenario<AnyReservationCommand, AnyReservationEvent>()
             .given(
-                VehicleEnteredOperation(
+                AnyReservationEvent.VehicleEnteredOperation(
                     LicensePlate.DutchLicensePlate("GHC-12-A"),
                     VehicleClass.LongDistanceTrips,
                     LocalDateTime.parse("2024-11-02T20:19:53"),
                 ),
             )
             .whenInstructed(
-                PleaseReserveVehicle(
+                AnyReservationCommand.PleaseReserveVehicle(
                     LicensePlate.DutchLicensePlate("GHC-12-A"),
                     "customer:11111111-1111-1111-1111-111111111111",
                     LocalDateTime.parse("2024-11-02T20:19:54"),
                 )
             )
             .thenExpect(
-                VehicleWasReserved(
+                AnyReservationEvent.VehicleWasReserved(
                     LicensePlate.DutchLicensePlate("GHC-12-A"),
                     VehicleClass.LongDistanceTrips,
                     "customer:11111111-1111-1111-1111-111111111111",
@@ -206,14 +210,14 @@ class PleaseReserveVehicleTest {
 
     @Test()
     fun `Is reserved`() {
-        val scenario = CommandHandlingScenario()
+        val scenario = CommandHandlingScenario<AnyReservationCommand, AnyReservationEvent>()
             .given(
-                VehicleEnteredOperation(
+                AnyReservationEvent.VehicleEnteredOperation(
                     LicensePlate.DutchLicensePlate("GHC-12-A"),
                     VehicleClass.LongDistanceTrips,
                     LocalDateTime.parse("2024-11-02T20:19:53"),
                 ),
-                VehicleWasReserved(
+                AnyReservationEvent.VehicleWasReserved(
                     LicensePlate.DutchLicensePlate("GHC-12-A"),
                     VehicleClass.LongDistanceTrips,
                     "customer:11111111-1111-1111-1111-111111111111",
@@ -221,14 +225,14 @@ class PleaseReserveVehicleTest {
                 )
             )
             .whenInstructed(
-                PleaseReserveVehicle(
+                AnyReservationCommand.PleaseReserveVehicle(
                     LicensePlate.DutchLicensePlate("GHC-12-A"),
                     "customer:22222222-2222-2222-2222-222222222222",
                     LocalDateTime.parse("2024-11-02T20:19:55"),
                 )
             )
             .thenExpect(
-                VehicleCouldNotBeReserved(
+                AnyReservationEvent.VehicleCouldNotBeReserved(
                     LicensePlate.DutchLicensePlate("GHC-12-A"),
                     VehicleClass.LongDistanceTrips,
                     "customer:22222222-2222-2222-2222-222222222222",
