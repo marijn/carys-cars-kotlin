@@ -1,7 +1,6 @@
 package com.carshare.modules.reserving
 
-import com.carshare.infrastructure.decider.State
-import com.carshare.infrastructure.messaging.Event
+import com.carshare.infrastructure.decider.StateLoader
 import com.carshare.modules.LicensePlate
 import com.carshare.modules.VehicleClass
 import org.assertj.core.api.Assertions
@@ -51,12 +50,6 @@ abstract class ReservingStateLoaderTest {
     }
 
     abstract fun createSubjectUnderTest(): StateLoader<LicensePlate, ReservingState, AnyReservationEvent>
-}
-
-interface StateLoader<AnyStateId, AnyState: State<AnyEvent>, AnyEvent: Event> {
-    fun add(identifiedBy: AnyStateId, state: AnyState)
-
-    fun loadStateOrElse(identifiedBy: AnyStateId, fallback: AnyState): AnyState
 }
 
 class InMemoryReservingStateLoader: StateLoader<LicensePlate, ReservingState, AnyReservationEvent> {
