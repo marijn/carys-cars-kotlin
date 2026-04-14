@@ -137,7 +137,7 @@ sealed interface ReservingState: State<AnyReservationEvent> {
     };
 }
 
-class ReservationDecider(
+class ReservingDecider(
     override val state: ReservingState
 ): Decider<AnyReservationCommand, AnyReservationEvent, ReservingState> {
     override fun decide(command: AnyReservationCommand): List<AnyReservationEvent> {
@@ -194,7 +194,7 @@ class PleaseReserveVehicleTest {
             )
             .assertOn(ReservingState.VehicleIsUnavailable(), {
                     state: ReservingState ->
-                ReservationDecider(state)
+                ReservingDecider(state)
             })
     }
 
@@ -232,7 +232,7 @@ class PleaseReserveVehicleTest {
             )
             .assertOn(ReservingState.VehicleIsUnavailable(), {
                     state: ReservingState ->
-                ReservationDecider(state)
+                ReservingDecider(state)
             })
     }
 }
