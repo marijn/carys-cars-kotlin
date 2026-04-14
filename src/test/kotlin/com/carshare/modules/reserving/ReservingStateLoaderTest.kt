@@ -3,6 +3,7 @@ package com.carshare.modules.reserving
 import com.carshare.infrastructure.decider.State
 import com.carshare.infrastructure.messaging.Event
 import com.carshare.modules.LicensePlate
+import com.carshare.modules.VehicleClass
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -27,6 +28,25 @@ abstract class ReservingStateLoaderTest {
 
         // assert
         val expected = fallback;
+        Assertions.assertThat(actual).usingRecursiveComparison().isEqualTo(expected)
+    }
+
+    @Test()
+    fun `Returns state that was added before`() {
+        // arrange
+        val stateLoader = createSubjectUnderTest();
+        val stateId = LicensePlate.DutchLicensePlate("JTG-59-R")
+        val state = ReservingState.VehicleIsReserved(
+            VehicleClass.FunVehicles,
+            "customer:11111111-1111-1111-1111-111111111111"
+        )
+        stateLoader.add(stateId, state);
+
+        // act
+        val actual = stateLoader.loadStateOrElse(stateId, ReservingState.VehicleIsUnavailable());
+
+        // assert
+        val expected = state;
         Assertions.assertThat(actual).usingRecursiveComparison().isEqualTo(expected)
     }
 
