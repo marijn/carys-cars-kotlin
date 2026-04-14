@@ -2,6 +2,7 @@ package com.carshare.modules.reserving
 
 import com.carshare.application.reserving.InMemoryReservingStateLoader
 import com.carshare.infrastructure.decider.StateLoader
+import com.carshare.modules.AnyReservationEvent
 import com.carshare.modules.LicensePlate
 import com.carshare.modules.VehicleClass
 import org.assertj.core.api.Assertions

@@ -9,7 +9,7 @@ import com.carshare.external.IVeriffClient
 import com.carshare.infrastructure.messaging.Command
 import com.carshare.infrastructure.messaging.HandlesCommands
 import com.carshare.modules.LicensePlate
-import com.carshare.modules.reserving.AnyReservationCommand
+import com.carshare.modules.AnyReservationCommand
 import com.carshare.repository.CustomerDailyReservationUsageRepository
 import com.carshare.repository.CustomerRepository
 import com.carshare.repository.ReservationRepository

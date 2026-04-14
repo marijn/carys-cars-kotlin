@@ -2,7 +2,7 @@ package com.carshare.application.reserving
 
 import com.carshare.infrastructure.decider.StateLoader
 import com.carshare.modules.LicensePlate
-import com.carshare.modules.reserving.AnyReservationEvent
+import com.carshare.modules.AnyReservationEvent
 import com.carshare.modules.reserving.ReservingState
 
 class InMemoryReservingStateLoader: StateLoader<LicensePlate, ReservingState, AnyReservationEvent> {

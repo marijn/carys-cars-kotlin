@@ -3,7 +3,7 @@ package com.carshare.controller
 import com.carshare.domain.*
 import com.carshare.infrastructure.messaging.HandlesCommands
 import com.carshare.modules.LicensePlate
-import com.carshare.modules.reserving.AnyReservationCommand
+import com.carshare.modules.AnyReservationCommand
 import com.carshare.service.*
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
