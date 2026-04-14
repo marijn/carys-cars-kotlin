@@ -11,7 +11,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
+import java.time.Clock
+import java.time.ZoneId
 import java.util.UUID
 
 // ---- DTOs ----
@@ -125,6 +126,7 @@ class ReservationController(
     private val reservationService: ReservationService,
     private val customerService: CustomerService,
     private val handler: HandlesCommands,
+    private val clock: Clock,
 ) {
     @PostMapping
     fun createReservation(
@@ -136,8 +138,9 @@ class ReservationController(
         val command = AnyReservationCommand.PleaseReserveVehicle(
             LicensePlate.DutchLicensePlate(vehicle.licensePlate),
             extractFromJwt(jwt),
-            LocalDateTime.now()
+            clock.instant().atZone(ZoneId.of("Europe/Amsterdam")).toLocalDateTime()
         );
+        this.handler.handle(command);
 
         val customer = customerService.getOrCreateCustomer(
             jwt.subject,

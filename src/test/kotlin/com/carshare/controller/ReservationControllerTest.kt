@@ -26,7 +26,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.query.FluentQuery
 import org.springframework.security.oauth2.jwt.Jwt
-import java.time.LocalDateTime
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 import java.util.function.Function
 
@@ -358,6 +360,8 @@ class ReservationControllerTest {
                 assertThat(commands).containsOnly(expectedCommand);
             }
         }
+        val currentTime = Instant.now()
+        val clock: Clock = Clock.fixed(currentTime, ZoneId.of("Europe/Amsterdam"))
         val controller = ReservationController(
             ReservationService(
                 mock<ReservationRepository>(),
@@ -369,7 +373,8 @@ class ReservationControllerTest {
                 20
             ),
             customerService,
-            fakeHandler
+            fakeHandler,
+            clock
         )
 
         assertThatThrownBy({
@@ -385,7 +390,7 @@ class ReservationControllerTest {
         val expectedCommand = AnyReservationCommand.PleaseReserveVehicle(
             LicensePlate.DutchLicensePlate("GGR-12-X"),
             "customer:11111111-1111-1111-1111-111111111111",
-            LocalDateTime.now()
+            clock.instant().atZone(ZoneId.of("Europe/Amsterdam")).toLocalDateTime()
         )
         fakeHandler.handledOnly(expectedCommand)
     }

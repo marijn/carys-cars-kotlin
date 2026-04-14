@@ -7,7 +7,9 @@ import com.carshare.infrastructure.messaging.Event
 import com.carshare.modules.CustomerId
 import com.carshare.modules.LicensePlate
 import com.carshare.modules.VehicleClass
+import org.springframework.cglib.core.Local
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 sealed interface AnyReservationEvent: Event {
     data class VehicleEnteredOperation(
