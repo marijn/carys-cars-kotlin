@@ -4,15 +4,9 @@ import com.carshare.infrastructure.decider.Decider
 import com.carshare.infrastructure.decider.State
 import com.carshare.infrastructure.messaging.Command
 import com.carshare.infrastructure.messaging.Event
+import com.carshare.modules.LicensePlate
 import java.time.LocalDateTime
 import org.junit.jupiter.api.Test
-
-sealed class LicensePlate {
-    data class DutchLicensePlate(val plateNo: String): LicensePlate();
-    data class GermanLicensePlate(val plateNo: String): LicensePlate();
-    data class SwissLicensePlate(val plateNo: String): LicensePlate();
-    data class DanishLicensePlate(val plateNo: String): LicensePlate();
-}
 
 enum class VehicleClass {
     InAndAroundTheCity,
