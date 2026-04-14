@@ -1,5 +1,6 @@
 package com.carshare.modules.reserving
 
+import com.carshare.application.reserving.InMemoryReservingStateLoader
 import com.carshare.infrastructure.decider.StateLoader
 import com.carshare.modules.LicensePlate
 import com.carshare.modules.VehicleClass
@@ -52,14 +53,3 @@ abstract class ReservingStateLoaderTest {
     abstract fun createSubjectUnderTest(): StateLoader<LicensePlate, ReservingState, AnyReservationEvent>
 }
 
-class InMemoryReservingStateLoader: StateLoader<LicensePlate, ReservingState, AnyReservationEvent> {
-    private val storage: MutableMap<LicensePlate, ReservingState> = mutableMapOf();
-
-    override fun add(identifiedBy: LicensePlate, state: ReservingState) {
-        storage[identifiedBy] = state;
-    }
-
-    override fun loadStateOrElse(identifiedBy: LicensePlate, fallback: ReservingState): ReservingState {
-        return storage.getOrElse(identifiedBy, { fallback });
-    }
-}
