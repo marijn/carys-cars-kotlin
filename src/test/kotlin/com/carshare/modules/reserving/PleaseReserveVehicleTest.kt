@@ -114,26 +114,28 @@ sealed interface AnyReservationCommand: Command {
     ): AnyReservationCommand
 }
 
-sealed class ReservingState: State<ReservingState>() {
-    class VehicleIsUnavailable(): ReservingState() {
-        override fun evolve(event: Event): ReservingState {
+sealed interface ReservingState: State<AnyReservationEvent> {
+    class VehicleIsUnavailable: ReservingState {
+        override fun evolve(event: AnyReservationEvent): ReservingState {
             return when(event) {
-                is VehicleEnteredOperation -> VehicleIsAvailable(event.vehicleClass)
-                else -> this
+                is AnyReservationEvent.VehicleEnteredOperation -> VehicleIsAvailable(event.vehicleClass)
+                is AnyReservationEvent.VehicleCouldNotBeReserved -> this
+                is AnyReservationEvent.VehicleWasReserved -> this
             };
         }
     };
 
     class VehicleIsAvailable(
         internal val vehicleClass: VehicleClass
-    ): ReservingState() {
-        override fun evolve(event: Event): ReservingState {
+    ): ReservingState {
+        override fun evolve(event: AnyReservationEvent): ReservingState {
             return when(event) {
-                is VehicleWasReserved -> VehicleIsReserved(
+                is AnyReservationEvent.VehicleWasReserved -> VehicleIsReserved(
                     this.vehicleClass,
                     event.reservedBy
                 )
-                else -> this
+                is AnyReservationEvent.VehicleCouldNotBeReserved -> this
+                is AnyReservationEvent.VehicleEnteredOperation -> this
             };
         }
     };
@@ -141,19 +143,21 @@ sealed class ReservingState: State<ReservingState>() {
     class VehicleIsReserved(
         internal val vehicleClass: VehicleClass,
         internal val reservedBy: CustomerId,
-    ): ReservingState() {
-        override fun evolve(event: Event): ReservingState {
+    ): ReservingState {
+        override fun evolve(event: AnyReservationEvent): ReservingState {
             return this;
         }
     };
 }
 
-class ReservationDecider(state: ReservingState): Decider<ReservingState>(state) {
-    override fun decide(command: Command): List<Event> {
+class ReservationDecider(
+    override val state: ReservingState
+): Decider<AnyReservationCommand, AnyReservationEvent, ReservingState> {
+    override fun decide(command: AnyReservationCommand): List<AnyReservationEvent> {
         return when (command) {
-            is PleaseReserveVehicle -> when(state) {
+            is AnyReservationCommand.PleaseReserveVehicle -> when(state) {
                 is ReservingState.VehicleIsAvailable -> listOf(
-                    VehicleWasReserved(
+                    AnyReservationEvent.VehicleWasReserved(
                         command.vehicle,
                         state.vehicleClass,
                         command.interestedCustomer,
@@ -161,7 +165,7 @@ class ReservationDecider(state: ReservingState): Decider<ReservingState>(state) 
                     )
                 )
                 is ReservingState.VehicleIsReserved -> listOf(
-                    VehicleCouldNotBeReserved(
+                    AnyReservationEvent.VehicleCouldNotBeReserved(
                         command.vehicle,
                         state.vehicleClass,
                         command.interestedCustomer,
@@ -169,9 +173,8 @@ class ReservationDecider(state: ReservingState): Decider<ReservingState>(state) 
                         command.issuedAt,
                     )
                 )
-                else -> listOf();
+                is ReservingState.VehicleIsUnavailable -> emptyList()
             }
-            else -> listOf();
         }
     }
 }
