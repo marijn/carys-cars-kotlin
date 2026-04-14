@@ -1,6 +1,9 @@
 package com.carshare.controller
 
 import com.carshare.domain.*
+import com.carshare.modules.LicensePlate
+import com.carshare.modules.reserving.AnyReservationCommand
+import com.carshare.repository.VehicleRepository
 import com.carshare.service.*
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
@@ -8,6 +11,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 import java.util.UUID
 
 // ---- DTOs ----
@@ -119,15 +123,32 @@ class VehicleController(
 @RequestMapping("/api/reservations")
 class ReservationController(
     private val reservationService: ReservationService,
-    private val customerService: CustomerService
+    private val customerService: CustomerService,
 ) {
     @PostMapping
     fun createReservation(
         @AuthenticationPrincipal jwt: Jwt,
         @RequestParam vehicleId: UUID
     ): Reservation {
-        val customer = customerService.getOrCreateCustomer(jwt.subject, "", "")
-        return reservationService.createReservation(customer.id, vehicleId)
+        AnyReservationCommand.PleaseReserveVehicle(
+            LicensePlate.DutchLicensePlate("GHX-12-A"),
+            extractFromJwt(jwt),
+            LocalDateTime.now()
+        );
+
+        val customer = customerService.getOrCreateCustomer(
+            jwt.subject,
+            "", ""
+        )
+        return reservationService.createReservation(
+            customer.id,
+            vehicleId
+        )
+    }
+
+    private fun extractFromJwt(jwt: Jwt): String {
+        // TODO: take customer id from jwt
+        return "customer:11111111-1111-1111-1111-111111111111"
     }
 
     @PostMapping("/{id}/extend")

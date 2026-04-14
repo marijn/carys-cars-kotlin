@@ -1,6 +1,9 @@
 package com.carshare.controller
 
 import com.carshare.domain.Customer
+import com.carshare.domain.Vehicle
+import com.carshare.domain.VehicleClass
+import com.carshare.domain.VehicleStatus
 import com.carshare.external.IStripeClient
 import com.carshare.external.IVeriffClient
 import com.carshare.repository.CustomerDailyReservationUsageRepository
@@ -160,6 +163,166 @@ class ReservationControllerTest {
                 TODO("Not yet implemented")
             }
         }
+        val vehicleRepository: VehicleRepository = object: VehicleRepository {
+            override fun findByStatus(status: VehicleStatus): List<Vehicle> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findByStatusAndVehicleClass(
+                status: VehicleStatus,
+                vehicleClass: VehicleClass
+            ): List<Vehicle> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findByStatusAndCity(
+                status: VehicleStatus,
+                city: String
+            ): List<Vehicle> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findBySmartcarId(smartcarId: String): Vehicle? {
+                TODO("Not yet implemented")
+            }
+
+            override fun findByBatteryLevelLessThanAndStatus(
+                threshold: Int,
+                status: VehicleStatus
+            ): List<Vehicle> {
+                TODO("Not yet implemented")
+            }
+
+            override fun flush() {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> saveAndFlush(entity: S & Any): S & Any {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> saveAllAndFlush(entities: Iterable<S?>): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllInBatch(entities: Iterable<Vehicle?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllByIdInBatch(ids: Iterable<UUID?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllInBatch() {
+                TODO("Not yet implemented")
+            }
+
+            override fun getOne(id: UUID): Vehicle {
+                TODO("Not yet implemented")
+            }
+
+            override fun getById(id: UUID): Vehicle {
+                TODO("Not yet implemented")
+            }
+
+            override fun getReferenceById(id: UUID): Vehicle {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> findAll(example: Example<S?>): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> findAll(
+                example: Example<S?>,
+                sort: Sort
+            ): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> saveAll(entities: Iterable<S?>): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAll(): List<Vehicle?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAllById(ids: Iterable<UUID?>): List<Vehicle?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAll(sort: Sort): List<Vehicle?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAll(pageable: Pageable): Page<Vehicle?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> findOne(example: Example<S?>): Optional<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> findAll(
+                example: Example<S?>,
+                pageable: Pageable
+            ): Page<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> count(example: Example<S?>): Long {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> exists(example: Example<S?>): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?, R : Any?> findBy(
+                example: Example<S?>,
+                queryFunction: Function<FluentQuery.FetchableFluentQuery<S?>?, R?>
+            ): R & Any {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> save(entity: S & Any): S & Any {
+                TODO("Not yet implemented")
+            }
+
+            override fun findById(id: UUID): Optional<Vehicle?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun existsById(id: UUID): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun count(): Long {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteById(id: UUID) {
+                TODO("Not yet implemented")
+            }
+
+            override fun delete(entity: Vehicle) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllById(ids: Iterable<UUID?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAll(entities: Iterable<Vehicle?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAll() {
+                TODO("Not yet implemented")
+            }
+
+        }
         val customerService = CustomerService(
             fakeCustomerRepository,
             mock<IStripeClient>(),
@@ -168,14 +331,14 @@ class ReservationControllerTest {
         val controller = ReservationController(
             ReservationService(
                 mock<ReservationRepository>(),
-                mock<VehicleRepository>(),
+                vehicleRepository,
                 customerService,
                 mock<CustomerDailyReservationUsageRepository>(),
                 20,
                 20,
                 20
             ),
-            customerService
+            customerService,
         )
 
         assertThatThrownBy({
