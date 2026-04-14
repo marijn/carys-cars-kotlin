@@ -54,17 +54,19 @@ abstract class ReservingStateLoaderTest {
 }
 
 interface StateLoader<AnyStateId, AnyState: State<AnyEvent>, AnyEvent: Event> {
-    fun add(identifiedBy: AnyStateId, state: AnyState): Void
+    fun add(identifiedBy: AnyStateId, state: AnyState)
 
     fun loadStateOrElse(identifiedBy: AnyStateId, fallback: AnyState): AnyState
 }
 
 class InMemoryReservingStateLoader: StateLoader<LicensePlate, ReservingState, AnyReservationEvent> {
-    override fun add(identifiedBy: LicensePlate, state: ReservingState): Void {
-        TODO("Not yet implemented")
+    private val storage: MutableMap<LicensePlate, ReservingState> = mutableMapOf();
+
+    override fun add(identifiedBy: LicensePlate, state: ReservingState) {
+        storage[identifiedBy] = state;
     }
 
     override fun loadStateOrElse(identifiedBy: LicensePlate, fallback: ReservingState): ReservingState {
-        return fallback;
+        return storage.getOrElse(identifiedBy, { fallback });
     }
 }
