@@ -1,4 +1,4 @@
-package com.carshare.modules.reserving
+package com.carshare.infrastructure.testing
 
 import com.carshare.infrastructure.decider.Decider
 import com.carshare.infrastructure.decider.State

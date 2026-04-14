@@ -1,5 +1,6 @@
 package com.carshare.modules.reserving
 
+import com.carshare.infrastructure.testing.CommandHandlingScenario
 import com.carshare.modules.LicensePlate
 import com.carshare.modules.VehicleClass
 import java.time.LocalDateTime
