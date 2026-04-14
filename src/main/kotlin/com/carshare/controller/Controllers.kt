@@ -3,7 +3,6 @@ package com.carshare.controller
 import com.carshare.domain.*
 import com.carshare.modules.LicensePlate
 import com.carshare.modules.reserving.AnyReservationCommand
-import com.carshare.repository.VehicleRepository
 import com.carshare.service.*
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
@@ -130,8 +129,10 @@ class ReservationController(
         @AuthenticationPrincipal jwt: Jwt,
         @RequestParam vehicleId: UUID
     ): Reservation {
+        val vehicle = reservationService.vehicleRepository.findById(vehicleId).orElseThrow();
+
         AnyReservationCommand.PleaseReserveVehicle(
-            LicensePlate.DutchLicensePlate("GHX-12-A"),
+            LicensePlate.DutchLicensePlate(vehicle.licensePlate),
             extractFromJwt(jwt),
             LocalDateTime.now()
         );

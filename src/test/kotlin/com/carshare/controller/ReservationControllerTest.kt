@@ -164,6 +164,8 @@ class ReservationControllerTest {
             }
         }
         val vehicleRepository: VehicleRepository = object: VehicleRepository {
+            private var vehicle: Vehicle? = null
+
             override fun findByStatus(status: VehicleStatus): List<Vehicle> {
                 TODO("Not yet implemented")
             }
@@ -287,11 +289,13 @@ class ReservationControllerTest {
             }
 
             override fun <S : Vehicle?> save(entity: S & Any): S & Any {
-                TODO("Not yet implemented")
+                vehicle = entity;
+
+                return entity
             }
 
-            override fun findById(id: UUID): Optional<Vehicle?> {
-                TODO("Not yet implemented")
+            override fun findById(id: UUID): Optional<Vehicle> {
+                return Optional.ofNullable<Vehicle>(vehicle);
             }
 
             override fun existsById(id: UUID): Boolean {
@@ -323,6 +327,15 @@ class ReservationControllerTest {
             }
 
         }
+        vehicleRepository.save(Vehicle(
+            UUID.fromString("12341234-1234-1234-1234-123412341234"),
+            "NOT USED: Smart Car Id",
+            "GGR-12-X",
+            "NOT USED: Make",
+            "NOT USED: Model",
+            1900,
+            "NOT USED: ACRISS",
+        ))
         val customerService = CustomerService(
             fakeCustomerRepository,
             mock<IStripeClient>(),
