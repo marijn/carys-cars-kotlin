@@ -158,3 +158,9 @@ class ReservingDecider(
         }
     }
 }
+
+sealed class ReservationRejectionReason {
+    data class AlreadyReserved(
+        private val currentlyReservedBy: String
+    ): ReservationRejectionReason();
+}
