@@ -5,3 +5,9 @@ interface Command {
 
 interface Event {
 }
+
+interface Question {
+}
+
+interface Answer {
+}

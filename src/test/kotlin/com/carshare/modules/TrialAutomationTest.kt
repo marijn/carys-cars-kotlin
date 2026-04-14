@@ -4,7 +4,6 @@ import com.carshare.infrastructure.automation.ProcessManager
 import com.carshare.infrastructure.automation.testing.AutomationScenario
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
-import java.time.ZoneId
 
 class TrialAutomationTest {
     @Test
@@ -12,7 +11,9 @@ class TrialAutomationTest {
         val scenario = AutomationScenario<TrialAutomationEvent, TrialAutomationCommand>()
             .whenTriggeredBecauseOf(
                 RentalEnded(
-                    "rental:1235"
+                    "rental:1235",
+                    "customer:11111111-1111-1111-1111-111111111111",
+                    LocalDateTime.parse("2024-11-02T20:19:53")
                 )
             )
             .thenExpect(
