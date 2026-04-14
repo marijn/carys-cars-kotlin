@@ -76,12 +76,6 @@ sealed interface AnyReservationEvent: Event {
     ): AnyReservationEvent
 }
 
-sealed class ReservationRejectionReason {
-    data class AlreadyReserved(
-        private val currentlyReservedBy: String
-    ): ReservationRejectionReason();
-}
-
 sealed interface AnyReservationCommand: Command {
     data class PleaseReserveVehicle(
         /**
