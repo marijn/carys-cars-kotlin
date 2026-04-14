@@ -5,15 +5,9 @@ import com.carshare.infrastructure.decider.State
 import com.carshare.infrastructure.messaging.Command
 import com.carshare.infrastructure.messaging.Event
 import com.carshare.modules.LicensePlate
+import com.carshare.modules.VehicleClass
 import java.time.LocalDateTime
 import org.junit.jupiter.api.Test
-
-enum class VehicleClass {
-    InAndAroundTheCity,
-    FunVehicles,
-    LongDistanceTrips,
-    MovingBulkyThings,
-}
 
 typealias CustomerId = String;
 
