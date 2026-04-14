@@ -183,7 +183,7 @@ class ReservationControllerTest {
                 Jwt.withTokenValue("Bearer")
                     .header("Some header", {})
                     .claim("Some claim", {})
-                    .subject("Some subject")
+                    .subject("customer:11111111-1111-1111-1111-111111111111")
                     .build(),
                 UUID.fromString("12341234-1234-1234-1234-123412341234")
             );
