@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 class TrialAutomationTest {
     @Test
     fun `It` () {
-        val scenario = AutomationScenario<TrialAutomationEvent, TrialAutomationCommand>()
+        val scenario = AutomationScenario<AnyTrialAutomationEvent, TrialAutomationCommand>()
             .whenTriggeredBecauseOf(
                 RentalEnded(
                     "rental:1235",
@@ -27,8 +27,8 @@ class TrialAutomationTest {
     }
 }
 
-class TrialAutomation: ProcessManager<TrialAutomationEvent, TrialAutomationCommand> {
-    override fun processEvent(trigger: TrialAutomationEvent): List<TrialAutomationCommand> {
+class TrialAutomation: ProcessManager<AnyTrialAutomationEvent, TrialAutomationCommand> {
+    override fun processEvent(trigger: AnyTrialAutomationEvent): List<TrialAutomationCommand> {
         TODO("Not yet implemented")
     }
 }
