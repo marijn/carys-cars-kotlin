@@ -3,6 +3,7 @@ package com.carshare.modules.driving
 import com.carshare.infrastructure.automation.testing.AutomationScenario
 import com.carshare.infrastructure.messaging.Command
 import com.carshare.infrastructure.messaging.Event
+import com.carshare.modules.UnlockVehicle
 import com.carshare.modules.rentals.RentalStarted
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
