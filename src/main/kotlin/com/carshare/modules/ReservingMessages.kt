@@ -86,7 +86,7 @@ data class PleaseReserveVehicle(
      * @example 2024-11-02 16:59:01 Europe/Amsterdam
      */
     val issuedAt: LocalDateTime
-): AnyReservationCommand, TrialAutomationCommand
+): AnyReservationCommand, AnyTrialAutomationCommand
 
 sealed interface AnyReservationEvent: Event {
 }

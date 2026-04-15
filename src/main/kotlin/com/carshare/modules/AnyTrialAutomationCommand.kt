@@ -7,6 +7,6 @@ sealed interface AnyTrialAutomationEvent: Event {
 
 }
 
-sealed interface TrialAutomationCommand: Command {
+sealed interface AnyTrialAutomationCommand: Command {
 
 }
