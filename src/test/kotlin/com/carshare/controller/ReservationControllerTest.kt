@@ -10,6 +10,7 @@ import com.carshare.infrastructure.messaging.Command
 import com.carshare.infrastructure.messaging.HandlesCommands
 import com.carshare.modules.LicensePlate
 import com.carshare.modules.AnyReservationCommand
+import com.carshare.modules.PleaseReserveVehicle
 import com.carshare.repository.CustomerDailyReservationUsageRepository
 import com.carshare.repository.CustomerRepository
 import com.carshare.repository.ReservationRepository
@@ -387,7 +388,7 @@ class ReservationControllerTest {
                 UUID.fromString("12341234-1234-1234-1234-123412341234")
             );
         }).hasMessage("Customer not ready to rent (KYC or payment missing)")
-        val expectedCommand = AnyReservationCommand.PleaseReserveVehicle(
+        val expectedCommand = PleaseReserveVehicle(
             LicensePlate.DutchLicensePlate("GGR-12-X"),
             "customer:11111111-1111-1111-1111-111111111111",
             clock.instant().atZone(ZoneId.of("Europe/Amsterdam")).toLocalDateTime()

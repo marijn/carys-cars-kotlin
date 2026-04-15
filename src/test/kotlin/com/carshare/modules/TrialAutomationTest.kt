@@ -17,7 +17,7 @@ class TrialAutomationTest {
                 )
             )
             .thenExpect(
-                AnyReservationCommand.PleaseReserveVehicle(
+                PleaseReserveVehicle(
                     LicensePlate.DutchLicensePlate("GGR-12-X"),
                     "customer:11111111-1111-1111-1111-111111111111",
                     LocalDateTime.now()
