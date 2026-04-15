@@ -4,16 +4,19 @@ import com.carshare.infrastructure.messaging.Answer
 import com.carshare.infrastructure.messaging.Event
 import com.carshare.infrastructure.messaging.Question
 import com.carshare.infrastructure.projection.Projection
+import com.carshare.modules.AnyAvailableVehiclesAnswer
+import com.carshare.modules.AnyAvailableVehiclesEvent
+import com.carshare.modules.AnyAvailableVehiclesQuestion
 import com.carshare.modules.AvailableVehicle
 import com.carshare.modules.AvailableVehicles
 import com.carshare.modules.WhatVehiclesAreAvailableInTheArea
 import com.carshare.modules.CarWasAddedToFleet
 import com.carshare.modules.CarWasRemovedFromFleet
 
-class ProjectionOfAvailableVehiclesIntoMemory: Projection<Event, Question, Answer> {
+class ProjectionOfAvailableVehiclesIntoMemory: Projection<AnyAvailableVehiclesEvent, AnyAvailableVehiclesQuestion, AnyAvailableVehiclesAnswer> {
     private var vehicles = listOf<AvailableVehicle>()
 
-    override fun acknowledge(event: Event) {
+    override fun acknowledge(event: AnyAvailableVehiclesEvent) {
         when (event) {
             is CarWasAddedToFleet -> vehicles = vehicles.plus(
                 AvailableVehicle(
@@ -26,7 +29,7 @@ class ProjectionOfAvailableVehiclesIntoMemory: Projection<Event, Question, Answe
         }
     }
 
-    override fun ask(question: Question): Answer {
+    override fun ask(question: AnyAvailableVehiclesQuestion): AnyAvailableVehiclesAnswer {
         return when(question) {
             is WhatVehiclesAreAvailableInTheArea -> AvailableVehicles(
                 question.fleet,
