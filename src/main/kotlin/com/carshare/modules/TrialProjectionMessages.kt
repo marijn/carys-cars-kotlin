@@ -12,7 +12,7 @@ sealed interface AnyTrialProjectionQuestions: Question {
 
 }
 
-sealed interface TrialProjectionAnswers: Answer {
+sealed interface AnyTrialProjectionAnswers: Answer {
 
 }
 
@@ -28,4 +28,4 @@ data class TripsInReportingPeriod (
     val customer: CustomerId,
     val reportingPeriod: String,
     val historicTrips: List<HistoricTrip>
-): TrialProjectionAnswers
+): AnyTrialProjectionAnswers
