@@ -1,11 +1,11 @@
 package com.carshare.modules.findingVehicles
 
 import com.carshare.domain.VehicleClass
-import com.carshare.infrastructure.messaging.Answer
-import com.carshare.infrastructure.messaging.Event
-import com.carshare.infrastructure.messaging.Question
 import com.carshare.infrastructure.projection.Projection
 import com.carshare.infrastructure.projection.testing.ProjectionScenario
+import com.carshare.modules.AnyAvailableVehiclesAnswer
+import com.carshare.modules.AnyAvailableVehiclesEvent
+import com.carshare.modules.AnyAvailableVehiclesQuestion
 import com.carshare.modules.AvailableVehicle
 import com.carshare.modules.AvailableVehicles
 import com.carshare.modules.WhatVehiclesAreAvailableInTheArea
@@ -18,7 +18,7 @@ abstract class AvailableVehiclesTest {
 
     @Test
     fun `It answers with no availability when no cars have been added to the fleet` () {
-        val scenario = ProjectionScenario<Event, Question, Answer>()
+        val scenario = ProjectionScenario<AnyAvailableVehiclesEvent, AnyAvailableVehiclesQuestion, AnyAvailableVehiclesAnswer>()
             .whenAskedFor(
                 WhatVehiclesAreAvailableInTheArea(
                     "NL",
@@ -37,7 +37,7 @@ abstract class AvailableVehiclesTest {
 
     @Test
     fun `It answers with availability when cars have been added to the fleet which have not been rented out` () {
-        val scenario = ProjectionScenario<Event, Question, Answer>()
+        val scenario = ProjectionScenario<AnyAvailableVehiclesEvent, AnyAvailableVehiclesQuestion, AnyAvailableVehiclesAnswer>()
             .given(
                 CarWasAddedToFleet(
                     "NL:HTZ-11-G",
@@ -83,7 +83,7 @@ abstract class AvailableVehiclesTest {
 
     @Test
     fun `It answers with availability when cars have been added to the fleet but leaves out cars that have been removed afterwards` () {
-        val scenario = ProjectionScenario<Event, Question, Answer>()
+        val scenario = ProjectionScenario<AnyAvailableVehiclesEvent, AnyAvailableVehiclesQuestion, AnyAvailableVehiclesAnswer>()
             .given(
                 CarWasAddedToFleet(
                     "NL:HTZ-11-G",
@@ -127,7 +127,7 @@ abstract class AvailableVehiclesTest {
             .assertOnProjection(createSubjectUnderTest())
     }
 
-    protected abstract fun createSubjectUnderTest(): Projection<Event, Question, Answer>
+    protected abstract fun createSubjectUnderTest(): Projection<AnyAvailableVehiclesEvent, AnyAvailableVehiclesQuestion, AnyAvailableVehiclesAnswer>
 }
 
 class ProjectionOfAvailableVehiclesIntoMemoryTest: AvailableVehiclesTest() {
