@@ -33,7 +33,7 @@ data class RentalStarted(
      * @example "NL:GGS-10-N"
      */
     val vehicle: String
-): Event
+): Event, AnyUnlockVehicleAutomationEvent
 
 data class RentalEnded (
     public val rentalId: String,
