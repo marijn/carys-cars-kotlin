@@ -87,5 +87,5 @@ sealed interface AnyReservationCommand: Command {
          * @example 2024-11-02 16:59:01 Europe/Amsterdam
          */
         val issuedAt: LocalDateTime
-    ): AnyReservationCommand, TrialAutomationCommand
+    ): AnyReservationCommand
 }
