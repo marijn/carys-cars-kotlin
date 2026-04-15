@@ -36,7 +36,7 @@ data class RentalStarted(
 ): Event, AnyUnlockVehicleAutomationEvent
 
 data class RentalEnded (
-    public val rentalId: String,
+    public val agreementId: String,
     public val customerId: String,
     public val rentalStarted: LocalDateTime
 ): TrialProjectEvents
