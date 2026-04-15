@@ -1,4 +1,4 @@
-package com.carshare.infrastructure.projections.testing
+package com.carshare.infrastructure.projection.testing
 
 import com.carshare.infrastructure.messaging.Answer
 import com.carshare.infrastructure.messaging.Event

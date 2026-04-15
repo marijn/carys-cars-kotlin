@@ -1,10 +1,7 @@
 package com.carshare.modules
 
-import com.carshare.infrastructure.messaging.Answer
-import com.carshare.infrastructure.messaging.Event
-import com.carshare.infrastructure.messaging.Question
 import com.carshare.infrastructure.projection.Projection
-import com.carshare.infrastructure.projections.testing.ProjectionScenario
+import com.carshare.infrastructure.projection.testing.ProjectionScenario
 import org.junit.jupiter.api.Test
 
 class TrialProjectionTest {
