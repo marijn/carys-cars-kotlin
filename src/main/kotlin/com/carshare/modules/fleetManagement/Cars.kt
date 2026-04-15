@@ -10,10 +10,10 @@ data class CarWasAddedToFleet (
     val odometer: Double,
     val vehicleClass: VehicleClass,
     val addedToFleetAt: LocalDateTime
-): Event()
+): Event
 
 data class CarWasRemovedFromFleet (
     val vehicle: String,
     val odometer: Double,
     val removedFromFleetAt: LocalDateTime
-): Event()
+): Event

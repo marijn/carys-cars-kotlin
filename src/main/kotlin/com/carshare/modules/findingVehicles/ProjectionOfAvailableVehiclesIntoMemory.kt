@@ -7,7 +7,7 @@ import com.carshare.infrastructure.projection.Projection
 import com.carshare.modules.fleetManagement.CarWasAddedToFleet
 import com.carshare.modules.fleetManagement.CarWasRemovedFromFleet
 
-class ProjectionOfAvailableVehiclesIntoMemory: Projection {
+class ProjectionOfAvailableVehiclesIntoMemory: Projection<Event, Question, Answer> {
     private var vehicles = listOf<AvailableVehicle>()
 
     override fun acknowledge(event: Event) {

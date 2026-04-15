@@ -4,8 +4,8 @@ import com.carshare.infrastructure.messaging.Answer
 import com.carshare.infrastructure.messaging.Event
 import com.carshare.infrastructure.messaging.Question
 
-interface Projection {
-    fun acknowledge(event: Event)
+interface Projection<AnyEvent, AnyQuestion, AnyAnswer> {
+    fun acknowledge(event: AnyEvent);
 
-    fun ask(question: Question): Answer
+    fun ask(question: AnyQuestion): AnyAnswer
 }

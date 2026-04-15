@@ -3,10 +3,12 @@ package com.carshare.infrastructure.decider
 import com.carshare.infrastructure.messaging.Command
 import com.carshare.infrastructure.messaging.Event
 
-abstract class State<AnyState> {
-    abstract fun evolve(event: Event): State<AnyState>
+interface State<AnyEvent: Event> {
+    fun evolve(event: AnyEvent): State<AnyEvent>
 }
 
-abstract class Decider<AnyState: State<AnyState>>(public val state: AnyState) {
-    abstract fun decide(command: Command): List<Event>
+interface Decider<AnyCommand: Command, AnyEvent: Event, AnyState: State<AnyEvent>> {
+    val state: AnyState
+
+    fun decide(command: AnyCommand): List<AnyEvent>
 }

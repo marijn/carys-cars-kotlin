@@ -6,12 +6,12 @@ import com.carshare.infrastructure.messaging.Question
 import com.carshare.infrastructure.projection.Projection
 import org.assertj.core.api.Assertions
 
-class ProjectionScenarioThenStep(
-    private val givenEvents: List<Event>,
-    private val whenQuestion: Question,
-    private val thenAnswer: Answer
+class ProjectionScenarioThenStep<AnyEvent: Event, AnyQuestion: Question, AnyAnswer: Answer>(
+    private val givenEvents: List<AnyEvent>,
+    private val whenQuestion: AnyQuestion,
+    private val thenAnswer: AnyAnswer
 ) {
-    fun assertOnProjection(subjectUnderTest: Projection) {
+    fun assertOnProjection(subjectUnderTest: Projection<AnyEvent, AnyQuestion, AnyAnswer>) {
         // arrange
         givenEvents.forEach { e -> subjectUnderTest.acknowledge(e) }
 
@@ -23,14 +23,14 @@ class ProjectionScenarioThenStep(
     }
 }
 
-class ProjectionScenarioWhenStep(
-    private val givenEvents: List<Event>,
-    private val whenQuestion: Question
+class ProjectionScenarioWhenStep<AnyEvent: Event, AnyQuestion: Question, AnyAnswer: Answer>(
+    private val givenEvents: List<AnyEvent>,
+    private val whenQuestion: AnyQuestion
 ) {
     fun thenExpect(
-        expectedAnswer: Answer
-    ): ProjectionScenarioThenStep {
-        return ProjectionScenarioThenStep(
+        expectedAnswer: AnyAnswer
+    ): ProjectionScenarioThenStep<AnyEvent, AnyQuestion, AnyAnswer> {
+        return ProjectionScenarioThenStep<AnyEvent, AnyQuestion, AnyAnswer>(
             givenEvents,
             whenQuestion,
             expectedAnswer
@@ -38,32 +38,32 @@ class ProjectionScenarioWhenStep(
     }
 }
 
-class ProjectionScenarioGivenStep(
-    private val givenEvents: List<Event>
+class ProjectionScenarioGivenStep<AnyEvent: Event, AnyQuestion: Question, AnyAnswer: Answer>(
+    private val givenEvents: List<AnyEvent>
 ) {
     fun whenAskedFor(
-        question: Question
-    ): ProjectionScenarioWhenStep {
-        return ProjectionScenarioWhenStep(
+        question: AnyQuestion
+    ): ProjectionScenarioWhenStep<AnyEvent, AnyQuestion, AnyAnswer> {
+        return ProjectionScenarioWhenStep<AnyEvent, AnyQuestion, AnyAnswer>(
             givenEvents,
             question
         )
     }
 }
 
-class ProjectionScenario {
+class ProjectionScenario<AnyEvent: Event, AnyQuestion: Question, AnyAnswer: Answer> {
     fun given(
-        vararg preConditions: Event
-    ): ProjectionScenarioGivenStep {
-        return ProjectionScenarioGivenStep(preConditions.toList())
+        vararg preConditions: AnyEvent
+    ): ProjectionScenarioGivenStep<AnyEvent, AnyQuestion, AnyAnswer> {
+        return ProjectionScenarioGivenStep<AnyEvent, AnyQuestion, AnyAnswer>(preConditions.toList())
     }
 
     fun whenAskedFor(
-        question: Question
-    ): ProjectionScenarioWhenStep {
-        val noPreviouslyHappenedEvents: List<Event> = listOf()
+        question: AnyQuestion
+    ): ProjectionScenarioWhenStep<AnyEvent, AnyQuestion, AnyAnswer> {
+        val noPreviouslyHappenedEvents: List<AnyEvent> = listOf()
 
-        return ProjectionScenarioGivenStep(noPreviouslyHappenedEvents)
+        return ProjectionScenarioGivenStep<AnyEvent, AnyQuestion, AnyAnswer>(noPreviouslyHappenedEvents)
             .whenAskedFor(question)
     }
 }

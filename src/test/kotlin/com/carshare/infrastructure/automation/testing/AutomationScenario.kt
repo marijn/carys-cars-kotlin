@@ -1,43 +1,43 @@
 package com.carshare.infrastructure.automation.testing
 
-import com.carshare.infrastructure.automation.ProcessManager
 import com.carshare.infrastructure.messaging.Command
 import com.carshare.infrastructure.messaging.Event
+import com.carshare.infrastructure.automation.ProcessManager
 import org.assertj.core.api.Assertions
 
-class AutomationScenarioThenStep(
-    private val givenEvents: List<Event>,
-    private val whenEvent: Event,
-    private val thenCommands: List<Command>
+class AutomationScenarioThenStep<AnyEvent: Event, AnyCommand: Command>(
+    private val givenEvents: List<AnyEvent>,
+    private val whenEvent: AnyEvent,
+    private val thenCommands: List<AnyCommand>
 ) {
-    fun assertOnProcessManager(subjectUnderTest: ProcessManager) {
+    fun assertOnProcessManager(subjectUnderTest: ProcessManager<AnyEvent, AnyCommand>) {
         // arrange
         givenEvents.forEach { e -> subjectUnderTest.processEvent(e) }
 
         // act
-        val actualCommands: List<Command> = subjectUnderTest.processEvent(whenEvent)
+        val actualCommands: List<AnyCommand> = subjectUnderTest.processEvent(whenEvent)
 
         // assert
         Assertions.assertThat(actualCommands).usingRecursiveComparison().isEqualTo(thenCommands)
     }
 }
 
-class AutomationScenarioWhenStep(
-    private val givenEvents: List<Event>,
-    private val whenEvent: Event
+class AutomationScenarioWhenStep<AnyEvent: Event, AnyCommand: Command>(
+    private val givenEvents: List<AnyEvent>,
+    private val whenEvent: AnyEvent
 ) {
     fun thenExpect(
-        vararg expectedCommands: Command
-    ): AutomationScenarioThenStep {
-        return AutomationScenarioThenStep(
+        vararg expectedCommands: AnyCommand
+    ): AutomationScenarioThenStep<AnyEvent, AnyCommand> {
+        return AutomationScenarioThenStep<AnyEvent, AnyCommand>(
             givenEvents,
             whenEvent,
             expectedCommands.toList()
         )
     }
 
-    fun thenNothingShouldHaveHappened(): AutomationScenarioThenStep {
-        return AutomationScenarioThenStep(
+    fun thenNothingShouldHaveHappened(): AutomationScenarioThenStep<AnyEvent, AnyCommand> {
+        return AutomationScenarioThenStep<AnyEvent, AnyCommand>(
             givenEvents,
             whenEvent,
             listOf()
@@ -45,32 +45,32 @@ class AutomationScenarioWhenStep(
     }
 }
 
-class AutomationScenarioGivenStep(
-    private val givenEvents: List<Event>
+class AutomationScenarioGivenStep<AnyEvent: Event, AnyCommand: Command>(
+    private val givenEvents: List<AnyEvent>
 ) {
     fun whenTriggeredBecauseOf(
-        triggeringEvent: Event
-    ): AutomationScenarioWhenStep {
-        return AutomationScenarioWhenStep(
+        triggeringEvent: AnyEvent
+    ): AutomationScenarioWhenStep<AnyEvent, AnyCommand> {
+        return AutomationScenarioWhenStep<AnyEvent, AnyCommand>(
             givenEvents,
             triggeringEvent
         )
     }
 }
 
-class AutomationScenario {
+class AutomationScenario<AnyEvent: Event, AnyCommand: Command> {
     fun given(
-        vararg preConditions: Event
-    ): AutomationScenarioGivenStep {
-        return AutomationScenarioGivenStep(preConditions.toList())
+        vararg preConditions: AnyEvent
+    ): AutomationScenarioGivenStep<AnyEvent, AnyCommand> {
+        return AutomationScenarioGivenStep<AnyEvent, AnyCommand>(preConditions.toList())
     }
 
     fun whenTriggeredBecauseOf(
-        triggeringEvent: Event
-    ): AutomationScenarioWhenStep {
-        val noPreviouslyHappenedEvents: List<Event> = listOf()
+        triggeringEvent: AnyEvent
+    ): AutomationScenarioWhenStep<AnyEvent, AnyCommand> {
+        val noPreviouslyHappenedEvents: List<AnyEvent> = listOf()
 
-        return AutomationScenarioGivenStep(noPreviouslyHappenedEvents)
+        return AutomationScenarioGivenStep<AnyEvent, AnyCommand>(noPreviouslyHappenedEvents)
             .whenTriggeredBecauseOf(triggeringEvent)
     }
 }

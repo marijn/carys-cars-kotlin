@@ -7,13 +7,13 @@ import com.carshare.infrastructure.messaging.Question
 data class WhatVehiclesAreAvailableInTheArea(
     val fleet: String,
     val referenceLocation: String
-) : Question()
+) : Question
 
 data class AvailableVehicles(
     val fleet: String,
     val referenceLocation: String,
     val availableVehicles: List<AvailableVehicle>
-): Answer()
+): Answer
 
 data class AvailableVehicle(
     val vehicle: String,

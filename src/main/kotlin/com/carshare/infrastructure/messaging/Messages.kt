@@ -1,13 +1,13 @@
 package com.carshare.infrastructure.messaging
 
-abstract class Command {
+interface Command {
 }
 
-abstract class Event {
+interface Event {
 }
 
-abstract class Answer {
+interface Question {
 }
 
-abstract class Question {
+interface Answer {
 }

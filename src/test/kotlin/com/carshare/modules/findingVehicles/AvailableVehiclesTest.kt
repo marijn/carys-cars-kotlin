@@ -1,6 +1,9 @@
 package com.carshare.modules.findingVehicles
 
 import com.carshare.domain.VehicleClass
+import com.carshare.infrastructure.messaging.Answer
+import com.carshare.infrastructure.messaging.Event
+import com.carshare.infrastructure.messaging.Question
 import com.carshare.infrastructure.projection.Projection
 import com.carshare.infrastructure.projection.testing.ProjectionScenario
 import com.carshare.modules.fleetManagement.CarWasAddedToFleet
@@ -12,7 +15,7 @@ abstract class AvailableVehiclesTest {
 
     @Test
     fun `It answers with no availability when no cars have been added to the fleet` () {
-        val scenario = ProjectionScenario()
+        val scenario = ProjectionScenario<Event, Question, Answer>()
             .whenAskedFor(
                 WhatVehiclesAreAvailableInTheArea(
                     "NL",
@@ -31,7 +34,7 @@ abstract class AvailableVehiclesTest {
 
     @Test
     fun `It answers with availability when cars have been added to the fleet which have not been rented out` () {
-        val scenario = ProjectionScenario()
+        val scenario = ProjectionScenario<Event, Question, Answer>()
             .given(
                 CarWasAddedToFleet(
                     "NL:HTZ-11-G",
@@ -77,7 +80,7 @@ abstract class AvailableVehiclesTest {
 
     @Test
     fun `It answers with availability when cars have been added to the fleet but leaves out cars that have been removed afterwards` () {
-        val scenario = ProjectionScenario()
+        val scenario = ProjectionScenario<Event, Question, Answer>()
             .given(
                 CarWasAddedToFleet(
                     "NL:HTZ-11-G",
@@ -121,7 +124,7 @@ abstract class AvailableVehiclesTest {
             .assertOnProjection(createSubjectUnderTest())
     }
 
-    protected abstract fun createSubjectUnderTest(): Projection
+    protected abstract fun createSubjectUnderTest(): Projection<Event, Question, Answer>
 }
 
 class ProjectionOfAvailableVehiclesIntoMemoryTest: AvailableVehiclesTest() {

@@ -1,6 +1,9 @@
 package com.carshare.controller
 
 import com.carshare.domain.*
+import com.carshare.infrastructure.messaging.HandlesCommands
+import com.carshare.modules.LicensePlate
+import com.carshare.modules.AnyReservationCommand
 import com.carshare.service.*
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
@@ -8,6 +11,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
+import java.time.Clock
+import java.time.ZoneId
 import java.util.UUID
 
 // ---- DTOs ----
@@ -119,15 +124,37 @@ class VehicleController(
 @RequestMapping("/api/reservations")
 class ReservationController(
     private val reservationService: ReservationService,
-    private val customerService: CustomerService
+    private val customerService: CustomerService,
+    private val handler: HandlesCommands,
+    private val clock: Clock,
 ) {
     @PostMapping
     fun createReservation(
         @AuthenticationPrincipal jwt: Jwt,
         @RequestParam vehicleId: UUID
     ): Reservation {
-        val customer = customerService.getOrCreateCustomer(jwt.subject, "", "")
-        return reservationService.createReservation(customer.id, vehicleId)
+        val vehicle = reservationService.vehicleRepository.findById(vehicleId).orElseThrow();
+
+        val command = AnyReservationCommand.PleaseReserveVehicle(
+            LicensePlate.DutchLicensePlate(vehicle.licensePlate),
+            extractFromJwt(jwt),
+            clock.instant().atZone(ZoneId.of("Europe/Amsterdam")).toLocalDateTime()
+        );
+        this.handler.handle(command);
+
+        val customer = customerService.getOrCreateCustomer(
+            jwt.subject,
+            "", ""
+        )
+        return reservationService.createReservation(
+            customer.id,
+            vehicleId
+        )
+    }
+
+    private fun extractFromJwt(jwt: Jwt): String {
+        // TODO: take customer id from jwt
+        return "customer:11111111-1111-1111-1111-111111111111"
     }
 
     @PostMapping("/{id}/extend")
