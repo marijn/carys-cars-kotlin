@@ -4,6 +4,7 @@ import com.carshare.domain.*
 import com.carshare.infrastructure.messaging.HandlesCommands
 import com.carshare.modules.LicensePlate
 import com.carshare.modules.AnyReservationCommand
+import com.carshare.modules.PleaseReserveVehicle
 import com.carshare.service.*
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
@@ -135,7 +136,7 @@ class ReservationController(
     ): Reservation {
         val vehicle = reservationService.vehicleRepository.findById(vehicleId).orElseThrow();
 
-        val command = AnyReservationCommand.PleaseReserveVehicle(
+        val command = PleaseReserveVehicle(
             LicensePlate.DutchLicensePlate(vehicle.licensePlate),
             extractFromJwt(jwt),
             clock.instant().atZone(ZoneId.of("Europe/Amsterdam")).toLocalDateTime()

@@ -42,6 +42,5 @@ class TrialProjection: Projection<TrialProjectEvents, TrialProjectionQuestions, 
                 )
         }
     }
-
 }
 

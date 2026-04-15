@@ -4,14 +4,17 @@ import com.carshare.infrastructure.decider.State
 import com.carshare.modules.AnyReservationEvent
 import com.carshare.modules.CustomerId
 import com.carshare.modules.VehicleClass
+import com.carshare.modules.VehicleCouldNotBeReserved
+import com.carshare.modules.VehicleEnteredOperation
+import com.carshare.modules.VehicleWasReserved
 
 sealed interface ReservingState: State<AnyReservationEvent> {
     class VehicleIsUnavailable: ReservingState {
         override fun evolve(event: AnyReservationEvent): ReservingState {
             return when(event) {
-                is AnyReservationEvent.VehicleEnteredOperation -> VehicleIsAvailable(event.vehicleClass)
-                is AnyReservationEvent.VehicleCouldNotBeReserved -> this
-                is AnyReservationEvent.VehicleWasReserved -> this
+                is VehicleEnteredOperation -> VehicleIsAvailable(event.vehicleClass)
+                is VehicleCouldNotBeReserved -> this
+                is VehicleWasReserved -> this
             };
         }
     };
@@ -21,12 +24,12 @@ sealed interface ReservingState: State<AnyReservationEvent> {
     ): ReservingState {
         override fun evolve(event: AnyReservationEvent): ReservingState {
             return when(event) {
-                is AnyReservationEvent.VehicleWasReserved -> VehicleIsReserved(
+                is VehicleWasReserved -> VehicleIsReserved(
                     this.vehicleClass,
                     event.reservedBy
                 )
-                is AnyReservationEvent.VehicleCouldNotBeReserved -> this
-                is AnyReservationEvent.VehicleEnteredOperation -> this
+                is VehicleCouldNotBeReserved -> this
+                is VehicleEnteredOperation -> this
             };
         }
     };
