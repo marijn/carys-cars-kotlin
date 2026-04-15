@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 class TrialProjectionTest {
     @Test
     fun `No trips were made` () {
-        val scenario = ProjectionScenario<TrialProjectEvents, TrialProjectionQuestions, TrialProjectionAnswers>()
+        val scenario = ProjectionScenario<AnyTrialProjectEvents, TrialProjectionQuestions, TrialProjectionAnswers>()
             .whenAskedFor(
                 WhatTripsHaveBeenTakenDuringTheReportingPeriod(
                     "customer:aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
@@ -25,8 +25,8 @@ class TrialProjectionTest {
     }
 }
 
-class TrialProjection: Projection<TrialProjectEvents, TrialProjectionQuestions, TrialProjectionAnswers> {
-    override fun acknowledge(event: TrialProjectEvents) {
+class TrialProjection: Projection<AnyTrialProjectEvents, TrialProjectionQuestions, TrialProjectionAnswers> {
+    override fun acknowledge(event: AnyTrialProjectEvents) {
         when(event) {
             is RentalEnded -> Unit
         }

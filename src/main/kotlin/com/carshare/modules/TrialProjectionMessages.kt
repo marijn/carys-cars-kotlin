@@ -4,7 +4,7 @@ import com.carshare.infrastructure.messaging.Answer
 import com.carshare.infrastructure.messaging.Event
 import com.carshare.infrastructure.messaging.Question
 
-sealed interface TrialProjectEvents: Event {
+sealed interface AnyTrialProjectEvents: Event {
 
 }
 

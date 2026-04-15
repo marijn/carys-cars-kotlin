@@ -6,4 +6,4 @@ data class RentalEnded (
     val rentalId: String,
     val customerId: String,
     val rentalStarted: LocalDateTime
-): AnyTrialAutomationEvent, TrialProjectEvents
+): AnyTrialAutomationEvent, AnyTrialProjectEvents
