@@ -8,7 +8,7 @@ sealed interface AnyTrialProjectEvents: Event {
 
 }
 
-sealed interface TrialProjectionQuestions: Question {
+sealed interface AnyTrialProjectionQuestions: Question {
 
 }
 
@@ -19,7 +19,7 @@ sealed interface TrialProjectionAnswers: Answer {
 data class WhatTripsHaveBeenTakenDuringTheReportingPeriod (
     val customer: CustomerId,
     val reportingPeriod: String
-): TrialProjectionQuestions
+): AnyTrialProjectionQuestions
 
 data class HistoricTrip (
     val rentalId: String,
