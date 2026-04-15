@@ -1,4 +1,4 @@
-package com.carshare.modules.findingVehicles
+package com.carshare.modules
 
 import com.carshare.domain.VehicleClass
 import com.carshare.infrastructure.messaging.Answer

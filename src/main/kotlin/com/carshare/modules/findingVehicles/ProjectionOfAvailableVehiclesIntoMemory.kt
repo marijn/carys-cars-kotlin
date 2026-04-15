@@ -4,6 +4,9 @@ import com.carshare.infrastructure.messaging.Answer
 import com.carshare.infrastructure.messaging.Event
 import com.carshare.infrastructure.messaging.Question
 import com.carshare.infrastructure.projection.Projection
+import com.carshare.modules.AvailableVehicle
+import com.carshare.modules.AvailableVehicles
+import com.carshare.modules.WhatVehiclesAreAvailableInTheArea
 import com.carshare.modules.fleetManagement.CarWasAddedToFleet
 import com.carshare.modules.fleetManagement.CarWasRemovedFromFleet
 
