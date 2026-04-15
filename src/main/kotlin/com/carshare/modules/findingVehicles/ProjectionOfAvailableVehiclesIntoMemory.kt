@@ -36,7 +36,6 @@ class ProjectionOfAvailableVehiclesIntoMemory: Projection<AnyAvailableVehiclesEv
                 question.referenceLocation,
                 vehicles
             )
-            else -> throw Exception("Unknown query")
         }
     }
 }
