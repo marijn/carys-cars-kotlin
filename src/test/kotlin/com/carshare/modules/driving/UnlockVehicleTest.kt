@@ -1,7 +1,7 @@
 package com.carshare.modules.driving
 
 import com.carshare.infrastructure.automation.testing.AutomationScenario
-import com.carshare.infrastructure.messaging.Command
+import com.carshare.modules.AnyUnlockVehicleAutomationCommand
 import com.carshare.modules.AnyUnlockVehicleAutomationEvent
 import com.carshare.modules.UnlockVehicle
 import com.carshare.modules.RentalStarted
@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 class UnlockVehicleTest {
     @Test()
     fun `once the rental has been started`() {
-        AutomationScenario<AnyUnlockVehicleAutomationEvent, Command>()
+        AutomationScenario<AnyUnlockVehicleAutomationEvent, AnyUnlockVehicleAutomationCommand>()
             .whenTriggeredBecauseOf(
                 RentalStarted(
                     "agreement:11111111-1111-1111-1111-111111111111",

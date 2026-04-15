@@ -6,9 +6,12 @@ import com.carshare.infrastructure.messaging.Event
 sealed interface AnyUnlockVehicleAutomationEvent: Event {
 }
 
+sealed interface AnyUnlockVehicleAutomationCommand: Command {
+}
+
 data class UnlockVehicle(
     /**
      * @example "NL:GGS-10-N"
      */
     val vehicle: String
-): Command
+): Command, AnyUnlockVehicleAutomationCommand
