@@ -38,5 +38,5 @@ data class RentalStarted(
 data class RentalEnded (
     public val agreementId: String,
     public val customerId: String,
-    public val rentalStarted: LocalDateTime
+    public val rentalEnded: LocalDateTime
 ): TrialProjectEvents
