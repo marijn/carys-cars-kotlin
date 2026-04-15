@@ -7,8 +7,8 @@ import com.carshare.infrastructure.projection.Projection
 import com.carshare.modules.AvailableVehicle
 import com.carshare.modules.AvailableVehicles
 import com.carshare.modules.WhatVehiclesAreAvailableInTheArea
-import com.carshare.modules.fleetManagement.CarWasAddedToFleet
-import com.carshare.modules.fleetManagement.CarWasRemovedFromFleet
+import com.carshare.modules.CarWasAddedToFleet
+import com.carshare.modules.CarWasRemovedFromFleet
 
 class ProjectionOfAvailableVehiclesIntoMemory: Projection<Event, Question, Answer> {
     private var vehicles = listOf<AvailableVehicle>()

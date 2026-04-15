@@ -1,4 +1,4 @@
-package com.carshare.modules.fleetManagement
+package com.carshare.modules
 
 import com.carshare.domain.VehicleClass
 import com.carshare.infrastructure.messaging.Event

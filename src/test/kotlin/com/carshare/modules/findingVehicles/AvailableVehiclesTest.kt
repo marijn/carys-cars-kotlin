@@ -9,8 +9,8 @@ import com.carshare.infrastructure.projection.testing.ProjectionScenario
 import com.carshare.modules.AvailableVehicle
 import com.carshare.modules.AvailableVehicles
 import com.carshare.modules.WhatVehiclesAreAvailableInTheArea
-import com.carshare.modules.fleetManagement.CarWasAddedToFleet
-import com.carshare.modules.fleetManagement.CarWasRemovedFromFleet
+import com.carshare.modules.CarWasAddedToFleet
+import com.carshare.modules.CarWasRemovedFromFleet
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
