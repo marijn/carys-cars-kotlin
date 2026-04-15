@@ -36,7 +36,18 @@ data class RentalStarted(
 ): Event, AnyUnlockVehicleAutomationEvent
 
 data class RentalEnded (
+    /**
+     * @example "agreement:d77d8ff5-ab2f-401d-83dc-a6631ec87b38"
+     */
     val agreementId: String,
+
+    /**
+     * @example "customer:92d68941-8783-471f-b3b8-7dbf7b803157"
+     */
     val customerId: String,
+
+    /**
+     * @example "2024-09-12 10:28 Europe/Amsterdam"
+     */
     val rentalEnded: LocalDateTime
 ): TrialProjectEvents
