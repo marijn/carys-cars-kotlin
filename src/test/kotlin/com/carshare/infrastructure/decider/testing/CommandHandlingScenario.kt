@@ -1,4 +1,4 @@
-package com.carshare.infrastructure.testing
+package com.carshare.infrastructure.decider.testing
 
 import com.carshare.infrastructure.decider.Decider
 import com.carshare.infrastructure.decider.State

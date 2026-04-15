@@ -1,6 +1,6 @@
 package com.carshare.modules.reserving
 
-import com.carshare.infrastructure.testing.CommandHandlingScenario
+import com.carshare.infrastructure.decider.testing.CommandHandlingScenario
 import com.carshare.modules.AnyReservationCommand
 import com.carshare.modules.AnyReservationEvent
 import com.carshare.modules.LicensePlate
