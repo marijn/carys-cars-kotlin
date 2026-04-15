@@ -7,4 +7,4 @@ data class UnlockVehicle(
      * @example "NL:GGS-10-N"
      */
     val vehicle: String
-): Command()
+): Command

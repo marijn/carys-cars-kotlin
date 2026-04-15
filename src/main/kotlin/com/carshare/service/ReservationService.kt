@@ -14,7 +14,7 @@ import java.util.UUID
 @Service
 class ReservationService(
     private val reservationRepository: ReservationRepository,
-    private val vehicleRepository: VehicleRepository,
+    val vehicleRepository: VehicleRepository,
     private val customerService: CustomerService,
     private val dailyUsageRepository: CustomerDailyReservationUsageRepository,
     @Value("\${app.reservation.free-minutes-per-day}") private val freeMinutesPerDay: Int,

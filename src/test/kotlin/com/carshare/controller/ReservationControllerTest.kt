@@ -1,0 +1,397 @@
+package com.carshare.controller
+
+import com.carshare.domain.Customer
+import com.carshare.domain.Vehicle
+import com.carshare.domain.VehicleClass
+import com.carshare.domain.VehicleStatus
+import com.carshare.external.IStripeClient
+import com.carshare.external.IVeriffClient
+import com.carshare.infrastructure.messaging.Command
+import com.carshare.infrastructure.messaging.HandlesCommands
+import com.carshare.modules.LicensePlate
+import com.carshare.modules.AnyReservationCommand
+import com.carshare.repository.CustomerDailyReservationUsageRepository
+import com.carshare.repository.CustomerRepository
+import com.carshare.repository.ReservationRepository
+import com.carshare.repository.VehicleRepository
+import com.carshare.service.CustomerService
+import com.carshare.service.ReservationService
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.repository.query.FluentQuery
+import org.springframework.security.oauth2.jwt.Jwt
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
+import java.util.*
+import java.util.function.Function
+
+class ReservationControllerTest {
+    @Test
+    fun `POST reservations`() {
+        // Arrange
+        val fakeCustomerRepository: CustomerRepository = object : CustomerRepository {
+            private var customer: Customer? = null
+
+            override fun findByOauthSubject(subject: String): Customer? {
+                return null
+            }
+
+            override fun findByEmail(email: String): Customer? {
+                TODO("Not yet implemented")
+            }
+
+            override fun flush() {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?> saveAndFlush(entity: S & Any): S & Any {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?> saveAllAndFlush(entities: Iterable<S?>): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllInBatch(entities: Iterable<Customer?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllByIdInBatch(ids: Iterable<UUID?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllInBatch() {
+                TODO("Not yet implemented")
+            }
+
+            override fun getOne(id: UUID): Customer {
+                TODO("Not yet implemented")
+            }
+
+            override fun getById(id: UUID): Customer {
+                TODO("Not yet implemented")
+            }
+
+            override fun getReferenceById(id: UUID): Customer {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?> findAll(example: Example<S?>): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?> findAll(example: Example<S?>, sort: Sort): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?> saveAll(entities: Iterable<S?>): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAll(): List<Customer?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAllById(ids: Iterable<UUID?>): List<Customer?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAll(sort: Sort): List<Customer?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAll(pageable: Pageable): Page<Customer?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?> findOne(example: Example<S?>): Optional<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?> findAll(example: Example<S?>, pageable: Pageable): Page<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?> count(example: Example<S?>): Long {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?> exists(example: Example<S?>): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?, R : Any?> findBy(
+                example: Example<S?>,
+                queryFunction: Function<FluentQuery.FetchableFluentQuery<S?>?, R?>
+            ): R & Any {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Customer?> save(entity: S & Any): S & Any {
+                this.customer = entity
+                return entity
+            }
+
+            override fun findById(id: UUID): Optional<Customer> {
+                return Optional.ofNullable(customer)
+            }
+
+            override fun existsById(id: UUID): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun count(): Long {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteById(id: UUID) {
+                TODO("Not yet implemented")
+            }
+
+            override fun delete(entity: Customer) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllById(ids: Iterable<UUID?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAll(entities: Iterable<Customer?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAll() {
+                TODO("Not yet implemented")
+            }
+        }
+        val vehicleRepository: VehicleRepository = object: VehicleRepository {
+            private var vehicle: Vehicle? = null
+
+            override fun findByStatus(status: VehicleStatus): List<Vehicle> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findByStatusAndVehicleClass(
+                status: VehicleStatus,
+                vehicleClass: VehicleClass
+            ): List<Vehicle> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findByStatusAndCity(
+                status: VehicleStatus,
+                city: String
+            ): List<Vehicle> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findBySmartcarId(smartcarId: String): Vehicle? {
+                TODO("Not yet implemented")
+            }
+
+            override fun findByBatteryLevelLessThanAndStatus(
+                threshold: Int,
+                status: VehicleStatus
+            ): List<Vehicle> {
+                TODO("Not yet implemented")
+            }
+
+            override fun flush() {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> saveAndFlush(entity: S & Any): S & Any {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> saveAllAndFlush(entities: Iterable<S?>): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllInBatch(entities: Iterable<Vehicle?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllByIdInBatch(ids: Iterable<UUID?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllInBatch() {
+                TODO("Not yet implemented")
+            }
+
+            override fun getOne(id: UUID): Vehicle {
+                TODO("Not yet implemented")
+            }
+
+            override fun getById(id: UUID): Vehicle {
+                TODO("Not yet implemented")
+            }
+
+            override fun getReferenceById(id: UUID): Vehicle {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> findAll(example: Example<S?>): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> findAll(
+                example: Example<S?>,
+                sort: Sort
+            ): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> saveAll(entities: Iterable<S?>): List<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAll(): List<Vehicle?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAllById(ids: Iterable<UUID?>): List<Vehicle?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAll(sort: Sort): List<Vehicle?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun findAll(pageable: Pageable): Page<Vehicle?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> findOne(example: Example<S?>): Optional<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> findAll(
+                example: Example<S?>,
+                pageable: Pageable
+            ): Page<S?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> count(example: Example<S?>): Long {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> exists(example: Example<S?>): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?, R : Any?> findBy(
+                example: Example<S?>,
+                queryFunction: Function<FluentQuery.FetchableFluentQuery<S?>?, R?>
+            ): R & Any {
+                TODO("Not yet implemented")
+            }
+
+            override fun <S : Vehicle?> save(entity: S & Any): S & Any {
+                vehicle = entity;
+
+                return entity
+            }
+
+            override fun findById(id: UUID): Optional<Vehicle> {
+                return Optional.ofNullable<Vehicle>(vehicle);
+            }
+
+            override fun existsById(id: UUID): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun count(): Long {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteById(id: UUID) {
+                TODO("Not yet implemented")
+            }
+
+            override fun delete(entity: Vehicle) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAllById(ids: Iterable<UUID?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAll(entities: Iterable<Vehicle?>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun deleteAll() {
+                TODO("Not yet implemented")
+            }
+
+        }
+        vehicleRepository.save(Vehicle(
+            UUID.fromString("12341234-1234-1234-1234-123412341234"),
+            "NOT USED: Smart Car Id",
+            "GGR-12-X",
+            "NOT USED: Make",
+            "NOT USED: Model",
+            1900,
+            "NOT USED: ACRISS",
+        ))
+        val customerService = CustomerService(
+            fakeCustomerRepository,
+            mock<IStripeClient>(),
+            mock<IVeriffClient>()
+        )
+        val fakeHandler = object : HandlesCommands {
+            var commands: Set<Command> = emptySet()
+
+            override fun handle(command: Command) {
+                commands = commands.plus(command)
+            }
+
+            fun handledOnly(expectedCommand: Command) {
+                assertThat(commands).containsOnly(expectedCommand);
+            }
+        }
+        val currentTime = Instant.now()
+        val clock: Clock = Clock.fixed(currentTime, ZoneId.of("Europe/Amsterdam"))
+        val controller = ReservationController(
+            ReservationService(
+                mock<ReservationRepository>(),
+                vehicleRepository,
+                customerService,
+                mock<CustomerDailyReservationUsageRepository>(),
+                20,
+                20,
+                20
+            ),
+            customerService,
+            fakeHandler,
+            clock
+        )
+
+        assertThatThrownBy({
+            controller.createReservation(
+                Jwt.withTokenValue("Bearer")
+                    .header("Some header", {})
+                    .claim("Some claim", {})
+                    .subject("customer:11111111-1111-1111-1111-111111111111")
+                    .build(),
+                UUID.fromString("12341234-1234-1234-1234-123412341234")
+            );
+        }).hasMessage("Customer not ready to rent (KYC or payment missing)")
+        val expectedCommand = AnyReservationCommand.PleaseReserveVehicle(
+            LicensePlate.DutchLicensePlate("GGR-12-X"),
+            "customer:11111111-1111-1111-1111-111111111111",
+            clock.instant().atZone(ZoneId.of("Europe/Amsterdam")).toLocalDateTime()
+        )
+        fakeHandler.handledOnly(expectedCommand)
+    }
+}

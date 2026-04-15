@@ -6,10 +6,10 @@ import com.carshare.infrastructure.messaging.Command
 import com.carshare.infrastructure.messaging.Event
 import org.assertj.core.api.Assertions
 
-class CommandHandlingScenarioThenStep {
-    private val givenEvents: List<Event>
-    private val whenCommand: Command
-    private val thenEvents: List<Event>
+class CommandHandlingScenarioThenStep<AnyCommand: Command, AnyEvent: Event> {
+    private val givenEvents: List<AnyEvent>
+    private val whenCommand: AnyCommand
+    private val thenEvents: List<AnyEvent>
 
     /**
      * @internal
@@ -17,25 +17,25 @@ class CommandHandlingScenarioThenStep {
      * @see CommandHandlingScenario.whenInstructed
      */
     constructor(
-        givenEvents: List<Event>,
-        whenCommand: Command,
-        thenEvents: List<Event>
+        givenEvents: List<AnyEvent>,
+        whenCommand: AnyCommand,
+        thenEvents: List<AnyEvent>
     ) {
         this.givenEvents = givenEvents;
         this.whenCommand = whenCommand;
         this.thenEvents = thenEvents;
     }
 
-    fun <AnyState: State<AnyState>>assertOn(initialState: AnyState, subjectUnderTestFactory: (state: AnyState) -> Decider<AnyState>) {
+    fun <AnyState: State<AnyEvent>>assertOn(initialState: State<AnyEvent>, subjectUnderTestFactory: (state: AnyState) -> Decider<AnyCommand, AnyEvent, AnyState>) {
         // arrange
-        var currentState: AnyState = initialState;
+        var currentState: State<AnyEvent> = initialState;
         for (givenEvent in givenEvents) {
-            currentState = currentState.evolve(givenEvent) as AnyState;
+            currentState = currentState.evolve(givenEvent);
         }
 
         // act
-        val subjectUnderTest = subjectUnderTestFactory(currentState);
-        val actualEvents: List<Event> = subjectUnderTest.decide(whenCommand);
+        val subjectUnderTest = subjectUnderTestFactory(currentState as AnyState);
+        val actualEvents: List<AnyEvent> = subjectUnderTest.decide(whenCommand);
 
         // assert
         val expectedEvents = thenEvents
@@ -43,9 +43,9 @@ class CommandHandlingScenarioThenStep {
     }
 }
 
-class CommandHandlingScenarioWhenStep {
-    private val givenEvents: List<Event>
-    private val whenCommand: Command
+class CommandHandlingScenarioWhenStep<AnyCommand: Command, AnyEvent: Event> {
+    private val givenEvents: List<AnyEvent>
+    private val whenCommand: AnyCommand
 
     /**
      * @internal
@@ -53,16 +53,16 @@ class CommandHandlingScenarioWhenStep {
      * @see CommandHandlingScenario.whenInstructed
      */
     constructor(
-        givenEvents: List<Event>,
-        whenCommand: Command
+        givenEvents: List<AnyEvent>,
+        whenCommand: AnyCommand
     ) {
         this.givenEvents = givenEvents;
         this.whenCommand = whenCommand;
     }
 
     fun thenExpect(
-        vararg expectedEvents: Event
-    ): CommandHandlingScenarioThenStep {
+        vararg expectedEvents: AnyEvent
+    ): CommandHandlingScenarioThenStep<AnyCommand, AnyEvent> {
         return CommandHandlingScenarioThenStep(
                 this.givenEvents,
                 this.whenCommand,
@@ -70,7 +70,7 @@ class CommandHandlingScenarioWhenStep {
         );
     }
 
-    fun thenNothingShouldHaveHappened(): CommandHandlingScenarioThenStep {
+    fun thenNothingShouldHaveHappened(): CommandHandlingScenarioThenStep<AnyCommand, AnyEvent> {
         return CommandHandlingScenarioThenStep(
             this.givenEvents,
             this.whenCommand,
@@ -79,20 +79,20 @@ class CommandHandlingScenarioWhenStep {
     }
 }
 
-class CommandHandlingScenarioGivenStep {
-    private val givenEvents: List<Event>
+class CommandHandlingScenarioGivenStep<AnyCommand: Command, AnyEvent: Event> {
+    private val givenEvents: List<AnyEvent>
 
     /**
      * @internal
      * @see CommandHandlingScenario.given
      */
-    constructor(givenEvents: List<Event>) {
+    constructor(givenEvents: List<AnyEvent>) {
         this.givenEvents = givenEvents;
     }
 
     fun whenInstructed(
-        triggeringCommand: Command
-    ): CommandHandlingScenarioWhenStep {
+        triggeringCommand: AnyCommand
+    ): CommandHandlingScenarioWhenStep<AnyCommand, AnyEvent> {
         return CommandHandlingScenarioWhenStep(
             this.givenEvents,
             triggeringCommand
@@ -100,19 +100,19 @@ class CommandHandlingScenarioGivenStep {
     }
 }
 
-class CommandHandlingScenario {
+class CommandHandlingScenario<AnyCommand: Command, AnyEvent: Event> {
     fun given(
-        vararg preConditions: Event
-    ): CommandHandlingScenarioGivenStep {
+        vararg preConditions: AnyEvent
+    ): CommandHandlingScenarioGivenStep<AnyCommand, AnyEvent> {
         return CommandHandlingScenarioGivenStep(preConditions.toList());
     }
 
     fun whenInstructed(
-        triggeringCommand: Command
-    ): CommandHandlingScenarioWhenStep {
-        val noPreviouslyHappenedEvents: List<Event> = listOf();
+        triggeringCommand: AnyCommand
+    ): CommandHandlingScenarioWhenStep<AnyCommand, AnyEvent> {
+        val noPreviouslyHappenedEvents: List<AnyEvent> = listOf();
 
-        return CommandHandlingScenarioGivenStep(noPreviouslyHappenedEvents)
+        return CommandHandlingScenarioGivenStep<AnyCommand, AnyEvent>(noPreviouslyHappenedEvents)
             .whenInstructed(triggeringCommand);
     }
 }

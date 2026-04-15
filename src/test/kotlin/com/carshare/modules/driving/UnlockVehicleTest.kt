@@ -1,6 +1,8 @@
 package com.carshare.modules.driving
 
 import com.carshare.infrastructure.automation.testing.AutomationScenario
+import com.carshare.infrastructure.messaging.Command
+import com.carshare.infrastructure.messaging.Event
 import com.carshare.modules.rentals.RentalStarted
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -8,7 +10,7 @@ import java.time.LocalDateTime
 class UnlockVehicleTest {
     @Test()
     fun `once the rental has been started`() {
-        AutomationScenario()
+        AutomationScenario<Event, Command>()
             .whenTriggeredBecauseOf(
                 RentalStarted(
                     "agreement:11111111-1111-1111-1111-111111111111",

@@ -5,7 +5,7 @@ import com.carshare.infrastructure.messaging.Command
 import com.carshare.infrastructure.messaging.Event
 import com.carshare.modules.rentals.RentalStarted
 
-class UnlockVehicleProcessManager: ProcessManager {
+class UnlockVehicleProcessManager: ProcessManager<Event, Command> {
     override fun processEvent(trigger: Event): List<Command> {
         return when(trigger) {
             is RentalStarted -> unlockVehicle(trigger.vehicle)
